@@ -18,6 +18,7 @@ Route::post('logout',[AdminController::class,'Logout'])->middleware('auth:sanctu
 
 Route::middleware('check_students')->group(function(){
     Route::get('get_school_stage',[StudentController::class, 'get_school_stage']);
+    Route::get('get_school_stage_subjects/{school_stage}',[StudentController::class, 'get_school_subjects_stage']);
     Route::post('choose_school_study_stage',[StudentController::class, 'choose_school_study_stage']);
     Route::post('choose_school_subjects',[StudentController::class, 'choose_school_subjects']);
     Route::post('Profile_complete',[StudentController::class, 'Profile_complete']);

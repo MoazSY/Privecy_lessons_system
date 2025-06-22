@@ -71,7 +71,21 @@ class StudentServices{
         return $this->student_repositories_interface->get_school_stage();
     }
     public function School_stage_subjects($school_stage){
-        return $this->student_repositories_interface->SchoolSubjects($school_stage);
+        $array=[];
+         $result=$this->student_repositories_interface->SchoolSubjects($school_stage);
+        if($result!=null){
+            foreach($result as $subject){
+                if($subject->subject_cover_image!=null){
+                    $imageUrl=asset('storage/'. $subject->subject_cover_image);
+                    $array[]=['subject'=>$subject,'imageUrl'=>$imageUrl];
+                }
+                else{
+                    $array[] = ['subject' => $subject, 'imageUrl' => null];
+                }
+            }
+            return $array;
+        }
+        return null;
     }
     public function Student_subject($school_subjects){
         $student = Auth::guard('student')->user()->id;
@@ -108,8 +122,20 @@ class StudentServices{
        return  $this->student_repositories_interface->UniversityStage($student, $university_stage_id);
     }
     public function get_university_stage_subjects($university_stage){
+        $array=[];
         $result=$this->student_repositories_interface->UniversitySubjects($university_stage);
-        return $result;
+        if($result!=null){
+            foreach ($result as $subject) {
+                if ($subject->subject_cover_image != null) {
+                    $imageUrl = asset('storage/' . $subject->subject_cover_image);
+                    $array[] = ['subject'=>$subject, 'imageUrl'=>$imageUrl];
+                } else {
+                    $array[] = ['subject'=>$subject,'imageUrl'=> null];
+                }
+            }
+            return $array;
+        }
+        return null;
     }
     public function Student_university_subjects($subjects){
         $student=Auth::guard('student')->user()->id;

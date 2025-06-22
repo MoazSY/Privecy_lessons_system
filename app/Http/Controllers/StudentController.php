@@ -80,7 +80,7 @@ public function sendOtp(Request $request){
     }
     public function get_school_subjects_stage(School_stage $school_stage){
       $subjects=$this->student_services->School_stage_subjects($school_stage);
-      if($subjects->isEmpty()){
+      if($subjects==null){
         return response()->json(['message'=>'not found any subjects']);
       }
       return response()->json(['message'=>'subjects in school stage','subjects'=>$subjects]);
@@ -135,6 +135,7 @@ public function sendOtp(Request $request){
         }
         return response()->json(['message' => 'get university stage successfully', 'result' => $response]);
     }
+
     public function Choose_university_study_stage(Request $request){
         $validate=Validator::make($request->all(),[
             'university_stage_id'=>'required|array',

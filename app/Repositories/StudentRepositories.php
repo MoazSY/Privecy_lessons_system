@@ -54,7 +54,15 @@ public function StudentSchoolStage($student_id, $School_stage_id)
 public function SchoolSubjects($stage)
 {
     $school_stage=School_stage::findOrFail($stage->id);
-    return $school_stage->SchoolSubjects;
+    if($school_stage){
+        $subjects= $school_stage->School_subjects;
+        if(!$school_stage->School_subjects()->exists()){
+            $subjects=null;
+        }
+    }else{
+        $subjects=null;
+    }
+    return $subjects;
 }
 public function StudentSchoolSubjects($student,$subjects){
     $student=Students::findOrFail($student);
@@ -121,11 +129,14 @@ public function UniversitySubjects($stage)
 {
 $subjects_stage=University_stage::where('id','=',$stage->id)->first();
 if($subjects_stage){
-$subjects_stage = $subjects_stage->University_subjects;
-}else{
-$subjects_stage=null;
+    $subjects_U_stage = $subjects_stage->University_subjects;
+    if(!$subjects_stage->University_subjects()->exists()){
+  $subjects_U_stage = null;
 }
-return $subjects_stage;
+}else{
+$subjects_U_stage=null;
+}
+return $subjects_U_stage;
 }
 public function Student_university_subjects($student,$subjects){
 $student=Students::findOrFail($student);

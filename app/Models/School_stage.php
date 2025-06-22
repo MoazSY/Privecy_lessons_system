@@ -17,7 +17,7 @@ class School_stage extends Model
     ];
 
     public function School_subjects(){
-        return $this->hasMany(School_subjects::class, 'student_school_stage', 'student_id', 'school_stage_id');
+        return $this->hasMany(School_subjects::class);
     }
     public function Student(){
         return $this->belongsToMany(Students::class);

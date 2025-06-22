@@ -36,7 +36,7 @@ class AdminController extends Controller
     }
     public function Login(Request $request){
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:admin',
+            'email' => 'required|email',
             'password' => 'required|alpha_num|min:8'
         ]);
         if ($validator->fails()) {
