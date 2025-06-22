@@ -31,7 +31,8 @@ class AdminController extends Controller
             return response()->json(['message'=>$validate->errors()]);
         }
         $result=$this->admin_services->Regester($request);
-        return response()->json(['message'=>'admin register successfully','admin'=>$result['admin'],'token'=>$result['token'],'refresh_token'=>$result['refresh_token']]);
+        return response()->json(['message'=>'admin register successfully','admin'=>$result['admin'],'token'=>$result['token'],'refresh_token'=>$result['refresh_token'],
+        'imageUrl'=>$result['imageUrl']]);
     }
     public function Login(Request $request){
         $validator = Validator::make($request->all(), [
@@ -84,7 +85,7 @@ class AdminController extends Controller
      if($validate->fails()){
         return response()->json(['message'=>$validate->errors()]);
      }
-     
+
      $result=$this->admin_services->Add_university_stage($request);
      return response()->json(['message'=>'university stage added successfully','result'=>$result]);
     }
