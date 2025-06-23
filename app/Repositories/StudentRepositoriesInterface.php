@@ -4,10 +4,6 @@ namespace App\Repositories;
 interface StudentRepositoriesInterface {
 public function create($request);
 public function Auth($credintals);
-    // public function Add_expierd_token($token);
-    // public function Refresh_token($token);
-    // public function Add_refresh_token($token);
-    // public function get_refresh_token_user($refresh_token);
     public function findStudent($student);
     public function StudentSchoolStage($student,$school_stage);
     public function get_school_stage();

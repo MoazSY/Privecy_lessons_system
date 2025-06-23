@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OtpController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -9,9 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('Send_verify_code',[StudentController::class, 'sendOtp']);
-Route::post('Verify_code',[StudentController::class, 'verifyOtp']);
-Route::post('Refresh_token',[StudentController::class, 'Refresh_token']);
+Route::post('Send_verify_code',[OtpController::class, 'sendOtp']);
+Route::post('Verify_code',[OtpController::class, 'verifyOtp']);
+Route::post('Refresh_token',[OtpController::class, 'Refresh_token']);
 Route::post('adminRegester',[AdminController::class,'Regester']);
 Route::post('login',[AdminController::class,'login']);
 Route::post('logout',[AdminController::class,'Logout'])->middleware('auth:sanctum');
@@ -34,5 +36,9 @@ Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);
 Route::post('Add_school_subject/{school_stage}',[AdminController::class, 'Add_school_subject']);
 Route::post('Add_university_stage',[AdminController::class, 'Add_university_stage']);
 Route::post('Add_university_subject/{university_stage}',[AdminController::class, 'Add_university_subject']);
+});
+
+Route::middleware('check_teacher')->group(function(){
+    Route::post('SendAccountForAprrove',[TeacherController::class, 'Register']);
 });
 
