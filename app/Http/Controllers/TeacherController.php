@@ -39,5 +39,5 @@ class TeacherController extends Controller
         return response()->json(['message'=>'teacher complete account and wait to approvement','teacher'=>$teacher[0],'imageUrl'=>$teacher[1],
     'Certificate_File_Url'=>$teacher[2]]);
 }
-
+    
 }

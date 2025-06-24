@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\RefreshToken;
 use App\Models\School_stage;
+use App\Models\School_subjects;
 use App\Models\Student_subject;
 use App\Models\Students;
 use App\Models\University_stage;
@@ -67,7 +68,7 @@ public function SchoolSubjects($stage)
 public function StudentSchoolSubjects($student,$subjects){
     $student=Students::findOrFail($student);
     $result=$student->Subjects()->sync($subjects);
-    $attachedSubjects=Student_subject::whereIn('id',$result['attached'])->get();
+    $attachedSubjects=School_subjects::whereIn('id',$result['attached'])->get();
     return $attachedSubjects;
 }
 public function Student_profile($student){

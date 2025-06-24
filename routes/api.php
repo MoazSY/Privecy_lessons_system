@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\StagesSubjectsController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Services\Stages_subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,18 +20,21 @@ Route::post('adminRegester',[AdminController::class,'Regester']);
 Route::post('login',[AdminController::class,'login']);
 Route::post('logout',[AdminController::class,'Logout'])->middleware('auth:sanctum');
 
+Route::middleware('check_auth')->group(function(){
+    Route::get('get_school_stage', [StagesSubjectsController::class, 'get_school_stage']);
+    Route::post('choose_school_study_stage', [StagesSubjectsController::class, 'choose_school_study_stage']);
+    Route::get('get_school_stage_subjects/{school_stage}', [StagesSubjectsController::class, 'get_school_subjects_stage']);
+    Route::post('choose_school_subjects', [StagesSubjectsController::class, 'choose_school_subjects']);
+    Route::get('get_university_stage', [StagesSubjectsController::class, 'get_university_stage']);
+    Route::post('Choose_university_study_stage', [StagesSubjectsController::class, 'Choose_university_study_stage']);
+    Route::get('get_university_stage_subjects/{university_stage}', [StagesSubjectsController::class, 'get_university_stage_subjects']);
+    Route::post('choose_university_subjects', [StagesSubjectsController::class, 'choose_university_subjects']);
+});
+
 Route::middleware('check_students')->group(function(){
-    Route::get('get_school_stage',[StudentController::class, 'get_school_stage']);
-    Route::get('get_school_stage_subjects/{school_stage}',[StudentController::class, 'get_school_subjects_stage']);
-    Route::post('choose_school_study_stage',[StudentController::class, 'choose_school_study_stage']);
-    Route::post('choose_school_subjects',[StudentController::class, 'choose_school_subjects']);
+
     Route::post('Profile_complete',[StudentController::class, 'Profile_complete']);
     Route::get('Student_profile',[StudentController::class, 'Student_profile']);
-    Route::get('get_university_stage',[StudentController::class, 'get_university_stage']);
-    Route::post('Choose_university_study_stage',[StudentController::class, 'Choose_university_study_stage']);
-    Route::get('get_university_stage_subjects/{university_stage}',[StudentController::class, 'get_university_stage_subjects']);
-    Route::post('choose_university_subjects',[StudentController::class, 'choose_university_subjects']);
-
 });
 Route::middleware('check_admin')->group(function(){
 Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);

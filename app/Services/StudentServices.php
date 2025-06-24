@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class StudentServices{
     protected $student_repositories_interface;
@@ -22,34 +23,10 @@ class StudentServices{
     }
 
 
-    public function Choose_school_stage($School_stage_id){
-        $student=Auth::guard('student')->user()->id;
-     return $this->student_repositories_interface->StudentSchoolStage($student, $School_stage_id);
-    }
-    public function School_stage(){
-        return $this->student_repositories_interface->get_school_stage();
-    }
-    public function School_stage_subjects($school_stage){
-        $array=[];
-         $result=$this->student_repositories_interface->SchoolSubjects($school_stage);
-        if($result!=null){
-            foreach($result as $subject){
-                if($subject->subject_cover_image!=null){
-                    $imageUrl=asset('storage/'. $subject->subject_cover_image);
-                    $array[]=['subject'=>$subject,'imageUrl'=>$imageUrl];
-                }
-                else{
-                    $array[] = ['subject' => $subject, 'imageUrl' => null];
-                }
-            }
-            return $array;
-        }
-        return null;
-    }
-    public function Student_subject($school_subjects){
-        $student = Auth::guard('student')->user()->id;
-        return $this->student_repositories_interface->StudentSchoolSubjects($student, $school_subjects);
-    }
+
+
+
+
     public function Profile_complate($request,$data){
         $student_id = Auth::guard('student')->user()->id;
         $student = Students::where('id', '=', $student_id)->first();
@@ -74,31 +51,7 @@ class StudentServices{
     $profile=$this->student_repositories_interface->Student_profile($student->id);
     return $profile;
     }
-    public function University_stage(){
-        return $this->student_repositories_interface->get_university_stage();
-    }
-    public function Choose_university_stage($university_stage_id){
-        $student = Auth::guard('student')->user()->id;
-       return  $this->student_repositories_interface->UniversityStage($student, $university_stage_id);
-    }
-    public function get_university_stage_subjects($university_stage){
-        $array=[];
-        $result=$this->student_repositories_interface->UniversitySubjects($university_stage);
-        if($result!=null){
-            foreach ($result as $subject) {
-                if ($subject->subject_cover_image != null) {
-                    $imageUrl = asset('storage/' . $subject->subject_cover_image);
-                    $array[] = ['subject'=>$subject, 'imageUrl'=>$imageUrl];
-                } else {
-                    $array[] = ['subject'=>$subject,'imageUrl'=> null];
-                }
-            }
-            return $array;
-        }
-        return null;
-    }
-    public function Student_university_subjects($subjects){
-        $student=Auth::guard('student')->user()->id;
-        return $this->student_repositories_interface->Student_university_subjects($student,$subjects);
-    }
+
+
+   
 }

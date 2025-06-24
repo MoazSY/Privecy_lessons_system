@@ -32,5 +32,18 @@ class Teacher extends Authenticatable
     {
         return $this->morphMany(RefreshToken::class, 'user_table');
     }
+    public function University_subjects(){
+        return $this->belongsToMany(University_subjects::class, 'teacher_university_subjects', 'teacher_id', 'university_subjects_id')->withPivot('lesson_duration', 'lesson_price')->withTimestamps();
+    }
+    public function School_subjects()
+    {
+        return $this->belongsToMany(School_subjects::class, 'teacher_school_subjects', 'teacher_id', 'school_subject_id')->withPivot('lesson_duration', 'lesson_price')->withTimestamps();
+    }
+    public function School_stage(){
+    return $this->belongsToMany(School_stage::class, 'teacher_school_stage', 'teacher_id', 'school_stage_id');
+    }
+    public function University_stage(){
+        return $this->belongsToMany(University_stage::class, 'teacher_school_stage', 'teacher_id', 'school_stage_id');
+    }
 
 }
