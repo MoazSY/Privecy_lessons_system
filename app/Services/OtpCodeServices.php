@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Models\Students;
+use App\Models\Teacher;
 use App\Repositories\StudentRepositoriesInterface;
 use App\Repositories\TeacherRepositoriesInterface;
 use App\Repositories\TokenRepositoriesInterface;
@@ -45,20 +47,42 @@ class OtpCodeServices{
             return ["message" => "code otp unvaliad or expiered", 'verify' => false];
         }
         if ($cachedOtp['user'] == 'student') {
-            $user = $this->student_repositories_interface->create($request);
-            $user->is_profile_completed = false;
-            $user->save();
+            $student= Students::where('phoneNumber', '=', $localPhone)->first();
+            if($student){
+                if($student->School_stage()->exists()||$student->University_stage()->exists()){
+                    $userStatus="Stage_register";
+                }else{
+                    $userStatus='Stage_not_register';
+                }
+                $user=$student;
+            }else{
+                $user = $this->student_repositories_interface->create($request);
+                $user->is_profile_completed = false;
+                $user->save();
+                $userStatus='user_new';
+            }
         }
         elseif ($cachedOtp['user'] == 'teacher') {
-            $user=$this->teacher_repositories_interface->create($request);
+            $teacher=Teacher::where('phoneNumber','=',$localPhone)->first();
+            if($teacher){
+                if($teacher->School_stage()->exists()||$teacher->University_stage()->exists()){
+                    $userStatus= 'Stage_register';
+                }else{
+                    $userStatus = 'Stage_not_register';
+                }
+                $user=$teacher;
+            }else{
+         $user = $this->teacher_repositories_interface->create($request);
+                $userStatus = 'user_new';
+            }
         }else{
             return null;
         }
         $token = $user->createToken('authToken')->plainTextToken;
         $this->token_repositories_interface->Add_expierd_token($token);
         $refresh_token = $this->token_repositories_interface->Add_refresh_token($token);
-        // cache()->forget('otp_' . $internalPhone);
-        return ["message" => "code verify successfully", 'verify' => true, "token" => $token, "refresh_token" => $refresh_token];
+        cache()->forget('otp_' . $internalPhone);
+        return ["message" => "code verify successfully", 'verify' => true, "token" => $token, "refresh_token" => $refresh_token,'user_status'=>$userStatus];
     }
     public function refresh_token($request)
     {

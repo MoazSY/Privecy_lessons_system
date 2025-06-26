@@ -19,15 +19,12 @@ class StudentController extends Controller
         $this->student_services=$student_services;
     }
 
-
-
-
     public function Profile_complete(Request $request){
         $validator=Validator::make($request->all(),[
             "firstName"=> 'sometimes|string|max:255',
             "lastName"=> 'sometimes|string|max:255',
             "birthdate"=> 'sometimes|date',
-            "email"=>'required|email',
+            "email"=>'required|email|unique:students',
             "password"=> 'required|min:8|alpha_num',
             "gender"=> 'sometimes|in:male,female',
             "about_him"=> 'sometimes|string|max:255',

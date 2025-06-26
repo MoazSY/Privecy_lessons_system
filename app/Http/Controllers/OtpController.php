@@ -18,7 +18,7 @@ $this->otp_code_services=$otp_code_services;
         $validator = Validator::make(
             $request->all(),
             [
-                'phoneNumber' => 'required|unique:students,phoneNumber|regex:/^09\d{8}$/',
+                'phoneNumber' => 'required|regex:/^09\d{8}$/',
                 'user' => 'required|string'
             ]
         );
@@ -51,7 +51,8 @@ $this->otp_code_services=$otp_code_services;
         if ($response['verify'] == false) {
             return response()->json(["message" => $response['message']]);
         } else
-            return response()->json(["message" => $response['message'], "token" => $response["token"], "refresh_token" => $response["refresh_token"]]);
+            return response()->json(["message" => $response['message'], "token" => $response["token"], "refresh_token" => $response["refresh_token"],
+            'user_status'=>$response['user_status']]);
     }
     public function Refresh_token(Request $request)
     {
