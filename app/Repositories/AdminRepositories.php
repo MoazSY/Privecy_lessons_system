@@ -17,14 +17,26 @@ use Illuminate\Support\Facades\Hash;
 
     public function AddSchool_stage($request)
     {
-        $school_stage=School_stage::create([
-            'className'=>$request->className,
-            'school_stage'=>$request->school_stage,
-            'semester'=>$request->semester,
-            'specialize'=>$request->specialize,
-            'secondary_school_branch'=>$request->secondary_school_branch,
-            'vocational_type'=>$request->vocational_type
-        ]);
+        if($request->specialize==true){
+            $school_stage = School_stage::create([
+                'className' => $request->className,
+                'school_stage' => $request->school_stage,
+                'semester' => $request->semester,
+                'specialize' => $request->specialize,
+                'secondary_school_branch' => $request->secondary_school_branch,
+                'vocational_type' => $request->vocational_type
+            ]);
+        }else{
+            $school_stage=School_stage::create([
+                'className'=>$request->className,
+                'school_stage'=>$request->school_stage,
+                'semester'=>$request->semester,
+                'specialize'=>null,
+                'secondary_school_branch'=>null,
+                'vocational_type'=>null
+            ]);
+        }
+
         return $school_stage;
     }
     public function AddSchool_subjects($school_stage, $request,$imagepath)
