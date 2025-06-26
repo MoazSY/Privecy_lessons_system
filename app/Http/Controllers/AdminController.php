@@ -52,7 +52,10 @@ class AdminController extends Controller
         $validate=Validator::make($request->all(),[
             'className'=>'required|string',
             'school_stage'=>'required|string',
-            'semester'=>'required|string'
+            'semester'=>'required|string',
+            'specialize'=>'sometimes|nullable|boolean',
+            'secondary_school_branch'=>'sometimes|nullable|string',
+            'vocational_type'=> 'sometimes|nullable|string'
         ]);
         if($validate->fails()){
             return response()->json(['message'=>$validate->errors()]);

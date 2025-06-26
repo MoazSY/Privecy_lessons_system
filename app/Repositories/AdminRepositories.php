@@ -20,7 +20,10 @@ use Illuminate\Support\Facades\Hash;
         $school_stage=School_stage::create([
             'className'=>$request->className,
             'school_stage'=>$request->school_stage,
-            'semester'=>$request->semester
+            'semester'=>$request->semester,
+            'specialize'=>$request->specialize,
+            'secondary_school_branch'=>$request->secondary_school_branch,
+            'vocational_type'=>$request->vocational_type
         ]);
         return $school_stage;
     }

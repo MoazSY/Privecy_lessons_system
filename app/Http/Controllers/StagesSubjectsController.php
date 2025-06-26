@@ -19,9 +19,9 @@ class StagesSubjectsController extends Controller
     public function get_school_stage()
     {
         $response = $this->stages_subjects->School_stage();
-        if ($response->isEmpty()) {
-            return response()->json(['message' => 'not found any stage']);
-        }
+        // if ($response->isEmpty()) {
+        //     return response()->json(['message' => 'not found any stage']);
+        // }
         return response()->json(['message' => 'get school stage successfully', 'result' => $response]);
     }
     public function choose_school_study_stage(Request $request)

@@ -11,8 +11,11 @@ class School_stage extends Model
     use Notifiable,HasFactory;
     protected $table='school_stage';
     protected $fillable=[
-        'className',
         'school_stage',
+        'className',
+        'specialize',
+        'secondary_school_branch',
+        'vocational_type',
         'semester'
     ];
 

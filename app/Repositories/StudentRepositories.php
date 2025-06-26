@@ -36,23 +36,75 @@ public function StudentSchoolStage($student_id, $School_stage_id)
     $attachedStages = School_stage::whereIn('id', $result['attached'])->get();
     return $attachedStages;
     }
+    // public function get_school_stage()
+    // {
+    //     $data=School_stage::all();
+    //     $grouped = $data->groupBy('school_stage')->map(function ($classes) {
+    //         return $classes->groupBy('className')->map(function ($semesters) {
+    //             return $semesters->map(function ($record) {
+    //                 return [
+    //                     'semester' => $record->semester,
+    //                     'id' => $record->id
+    //                 ];
+    //             })->unique('semester')->values();
+    //         });
+    //     });
+
+    //     return $grouped;
+    // }
+
     public function get_school_stage()
     {
-        $data=School_stage::all();
-        $grouped = $data->groupBy('school_stage')->map(function ($classes) {
-            return $classes->groupBy('className')->map(function ($semesters) {
-                return $semesters->map(function ($record) {
+        $data = School_stage::all();
+
+        $grouped = $data->groupBy(function ($record) {
+            return $record->specialize ? 'specialized' : 'general';
+        });
+
+        $general = optional($grouped['general'])->groupBy('school_stage')->map(function ($classes) {
+            return $classes->groupBy('className')->map(function ($records) {
+                return $records->map(function ($record) {
                     return [
                         'semester' => $record->semester,
-                        'id' => $record->id
+                        'id' => $record->id,
                     ];
                 })->unique('semester')->values();
             });
         });
 
-        return $grouped;
+        $specialized = optional($grouped['specialized'])->groupBy('secondary_school_branch')->map(function ($branchGroup, $branchKey) {
+            if ($branchKey === 'vocational') {
+                return $branchGroup->groupBy('vocational_type')->map(function ($types) {
+                    return $types->groupBy('className')->map(function ($records) {
+                        return $records->map(function ($record) {
+                            return [
+                                'semester' => $record->semester,
+                                'id' => $record->id,
+                            ];
+                        })->unique('semester')->values();
+                    });
+                });
+            } else {
+                return $branchGroup->groupBy('className')->map(function ($records) {
+                    return $records->map(function ($record) {
+                        return [
+                            'semester' => $record->semester,
+                            'id' => $record->id,
+                        ];
+                    })->unique('semester')->values();
+                });
+            }
+        });
+
+        return array_filter([
+            'primary' => $general['primary'] ?? null,
+            'preparatory' => $general['preparatory'] ?? null,
+            'secondary' => $specialized,
+        ]);
     }
-public function SchoolSubjects($stage)
+
+
+    public function SchoolSubjects($stage)
 {
     $school_stage=School_stage::findOrFail($stage->id);
     if($school_stage){
@@ -81,10 +133,10 @@ public function Student_profile($student){
         return $student;
     }
     public function get_university_stage()
-    {
-$data = University_stage::all();
-// return $data;
-$grouped = $data->groupBy('university_type')->map(function ($branches) {
+{
+       $data = University_stage::all();
+       // return $data;
+    $grouped = $data->groupBy('university_type')->map(function ($branches) {
     return $branches->groupBy('university_branch')->map(function ($colleges) {
      return $colleges->groupBy('college_name')->map(function ($years) {
      return $years->groupBy('study_year')->map(function ($records) {
@@ -115,8 +167,8 @@ $grouped = $data->groupBy('university_type')->map(function ($branches) {
             });
         });
     });
-});
-return $grouped;
+   });
+   return $grouped;
     }
 
     public function UniversityStage($student_id,$university_stage_id)

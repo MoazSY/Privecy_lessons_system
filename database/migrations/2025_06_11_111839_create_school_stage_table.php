@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('school_stage', function (Blueprint $table) {
             $table->id();
-            $table->string("className");
-            $table->string("school_stage");
-            $table->string("semester");
+            $table->enum("school_stage",["primary", "preparatory", "secondary"]);
+            $table->enum("className",["first","second","third","fourth","fifth","sixth"]);
+            $table->boolean("specialize")->nullable();
+            $table->enum("secondary_school_branch",['scientific','literary','vocational'])->nullable();
+            $table->string("vocational_type")->nullable();
+            $table->enum("semester",["one","tow"]);
             $table->timestamps();
         });
     }
