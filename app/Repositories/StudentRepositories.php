@@ -61,31 +61,10 @@ public function StudentSchoolStage($student_id, $School_stage_id)
             return $record->specialize ? 'specialized' : 'general';
         });
 
-        $general = optional($grouped['general'])->groupBy('school_stage')->map(function ($classes) {
-            return $classes->groupBy('className')->map(function ($records) {
-                return $records->map(function ($record) {
-                    return [
-                        'semester' => $record->semester,
-                        'id' => $record->id,
-                    ];
-                })->unique('semester')->values();
-            });
-        });
-
-        $specialized = optional($grouped['specialized'])->groupBy('secondary_school_branch')->map(function ($branchGroup, $branchKey) {
-            if ($branchKey === 'vocational') {
-                return $branchGroup->groupBy('vocational_type')->map(function ($types) {
-                    return $types->groupBy('className')->map(function ($records) {
-                        return $records->map(function ($record) {
-                            return [
-                                'semester' => $record->semester,
-                                'id' => $record->id,
-                            ];
-                        })->unique('semester')->values();
-                    });
-                });
-            } else {
-                return $branchGroup->groupBy('className')->map(function ($records) {
+        $general = collect();
+        if ($grouped->has('general')) {
+            $general = $grouped->get('general')->groupBy('school_stage')->map(function ($classes) {
+                return $classes->groupBy('className')->map(function ($records) {
                     return $records->map(function ($record) {
                         return [
                             'semester' => $record->semester,
@@ -93,13 +72,42 @@ public function StudentSchoolStage($student_id, $School_stage_id)
                         ];
                     })->unique('semester')->values();
                 });
-            }
-        });
+            });
+        }
+
+        $specialized = collect();
+        if ($grouped->has('specialized')) {
+            $specialized = $grouped->get('specialized')
+                ->groupBy('secondary_school_branch')
+                ->map(function ($branchGroup, $branchKey) {
+                    if ($branchKey === 'vocational') {
+                        return $branchGroup->groupBy('vocational_type')->map(function ($types) {
+                            return $types->groupBy('className')->map(function ($records) {
+                                return $records->map(function ($record) {
+                                    return [
+                                        'semester' => $record->semester,
+                                        'id' => $record->id,
+                                    ];
+                                })->unique('semester')->values();
+                            });
+                        });
+                    } else {
+                        return $branchGroup->groupBy('className')->map(function ($records) {
+                            return $records->map(function ($record) {
+                                return [
+                                    'semester' => $record->semester,
+                                    'id' => $record->id,
+                                ];
+                            })->unique('semester')->values();
+                        });
+                    }
+                });
+        }
 
         return array_filter([
             'primary' => $general['primary'] ?? null,
             'preparatory' => $general['preparatory'] ?? null,
-            'secondary' => $specialized,
+            'secondary' => $specialized->isEmpty() ? null : $specialized,
         ]);
     }
 
