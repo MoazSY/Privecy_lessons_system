@@ -7,4 +7,5 @@ namespace App\Repositories;
     public function TeacherSchoolSubjects($teacher,$subjects,$request);
     public function UniversityStage($teacher, $university_stage_id);
     public function Teacher_university_subjects($teacher,$subjects,$request);
+    public function UnActivate_account();
  }

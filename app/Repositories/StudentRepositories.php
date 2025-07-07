@@ -141,7 +141,7 @@ public function Student_profile($student){
         return $student;
     }
     public function get_university_stage()
-{
+ {
        $data = University_stage::all();
        // return $data;
     $grouped = $data->groupBy('university_type')->map(function ($branches) {

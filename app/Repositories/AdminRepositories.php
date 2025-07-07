@@ -6,9 +6,11 @@ namespace App\Repositories;
 use App\Models\Admin;
 use App\Models\School_stage;
 use App\Models\School_subjects;
+use App\Models\Teacher;
 use App\Models\University_stage;
 use App\Models\University_subjects;
 use App\Repositories\AdminRepositoriesInterface ;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
  class AdminRepositories implements AdminRepositoriesInterface{
@@ -142,6 +144,32 @@ use Illuminate\Support\Facades\Hash;
             ]);
         }
         return $admin;
+    }
+    public function proccess_teacher_account($teacher, $request)
+    {
+        $admin_id=Auth::guard('admin')->user()->id;
+        $admin=Admin::findOrFail($admin_id);
+        $teacher = Teacher::findOrFail($teacher->id);
+        if ($request->state == 'approve') {
+            $admin->TeacherAccount()->syncWithoutDetaching([
+                $teacher->id => [
+                    'state' => $request->state,
+                    'cause_of_reject' => null,
+                ]
+            ]);}
+             else{
+                $admin->TeacherAccount()->syncWithoutDetaching([
+                    $teacher->id => [
+                        'state' => $request->state,
+                        'cause_of_reject' => $request->cause_of_reject,
+                    ]
+                ]);
+
+        }
+
+        //notify teacher
+
+        return ;
     }
 
 }

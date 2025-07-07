@@ -41,6 +41,8 @@ Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);
 Route::post('Add_school_subject/{school_stage}',[AdminController::class, 'Add_school_subject']);
 Route::post('Add_university_stage',[AdminController::class, 'Add_university_stage']);
 Route::post('Add_university_subject/{university_stage}',[AdminController::class, 'Add_university_subject']);
+Route::get('Teacher_accounts_for_approve',[AdminController::class, 'get_teacher_account_for_approve']);
+Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'proccess_teacher_account']);
 });
 
 Route::middleware('check_teacher')->group(function(){

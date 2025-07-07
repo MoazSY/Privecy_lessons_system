@@ -2,10 +2,17 @@
 namespace App\Services;
 
 use App\Models\Teacher;
+use App\Repositories\TeacherRepositories;
+use App\Repositories\TeacherRepositoriesInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class TeacherServices{
+protected $teacher_repositories_interface;
+    public function __construct(TeacherRepositoriesInterface $teacher_repositories_interface)
+    {
+    $this->teacher_repositories_interface= $teacher_repositories_interface;
+    }
     public function Register($request,$data){
         $teacher_id=Auth::guard('teacher')->user()->id;
         $teacher=Teacher::where('id','=',$teacher_id)->first();
@@ -27,4 +34,8 @@ class TeacherServices{
         return [$teacher,$imageUrl,$fileUrl];
 
     }
+    public function UnActivate_account(){
+    return $this->teacher_repositories_interface->UnActivate_account();
+    }
+
 }

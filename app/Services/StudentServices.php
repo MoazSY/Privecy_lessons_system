@@ -23,10 +23,6 @@ class StudentServices{
     }
 
 
-
-
-
-
     public function Profile_complate($request,$data){
         $student_id = Auth::guard('student')->user()->id;
         $student = Students::where('id', '=', $student_id)->first();
@@ -53,5 +49,5 @@ class StudentServices{
     }
 
 
-   
+
 }

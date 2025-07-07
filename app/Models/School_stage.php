@@ -22,6 +22,7 @@ class School_stage extends Model
     public function School_subjects(){
         return $this->hasMany(School_subjects::class);
     }
+    
     public function Student(){
         return $this->belongsToMany(Students::class);
     }

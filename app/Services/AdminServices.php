@@ -114,4 +114,13 @@ public function login($request){
         return response()->json(['message'=>'user token unavailable']);
 
     }
+    public function proccess_teacher_account($teacher, $request)
+    {
+        if($request->state== "approve"){
+            $TeacherAccount=Teacher::findOrFail($teacher->id);
+            $TeacherAccount->Activate_Account=true;
+            $TeacherAccount->save();
+        }
+        return $this->admin_repositories_interface->proccess_teacher_account($teacher, $request);
+    }
 }

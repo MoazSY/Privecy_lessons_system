@@ -66,4 +66,18 @@ public function SendAccountForAprrove($request){
         $attached = University_subjects::whereIn('id', $result['attached'])->get();
         return $attached;
    }
+
+   public function UnActivate_account(){
+    $array=[];
+    $accounts= Teacher::where('Activate_Account','=',false)->get();
+    foreach($accounts as $account){
+        if($account->School_subjects()->exists()|| $account->University_subjects()->exists()){
+            $teacher_School_Subjects=$account->School_subjects;
+            $teacher_University_Subjects=$account->University_subjects;
+            $array[]=["account"=>$account];
+        }
+    }
+    return $array;
+   }
+ 
 }

@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\School_stage;
+use App\Models\Teacher;
 use App\Models\University_stage;
 use App\Services\AdminServices;
+use App\Services\TeacherServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
     protected $admin_services;
-    public function __construct(AdminServices $admin_services)
+    protected $teacherServices;
+    public function __construct(AdminServices $admin_services,TeacherServices $teacherServices)
     {
         $this->admin_services=$admin_services;
+        $this->teacherServices=$teacherServices;
     }
     public function Regester(Request $request){
         $validate=Validator::make($request->all(),[
@@ -103,5 +107,23 @@ class AdminController extends Controller
         }
         $result= $this->admin_services->Add_university_subject($request,$university_stage);
         return response()->json(['message'=>'university subject added successfully','result'=>$result]);
+    }
+    public function get_teacher_account_for_approve(){
+        $accounts=$this->teacherServices->UnActivate_account();
+        if(empty($accounts)){
+            return response()->json(['message'=>'not found any accounts for approve',404]);
+        }
+        return response()->json(['message'=>'All teacher accounts for approve','Accounts'=>$accounts]);
+    }
+    public function proccess_teacher_account(Teacher $teacher,Request $request){
+        $validate=Validator::make($request->all(),[
+            'state'=> 'required|in:approve,reject',
+            'cause_of_reject'=>'sometimes|nullable|string'
+        ]);
+        if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $proccess_account=$this->admin_services->proccess_teacher_account($teacher,$request);
+        return response()->json(['message'=>'teacher account proccess successfully']);
     }
 }
