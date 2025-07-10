@@ -79,5 +79,10 @@ public function SendAccountForAprrove($request){
     }
     return $array;
    }
- 
+   public function add_worktime($request,$teacher_id){
+    $teacher=Teacher::findOrFail($teacher_id);
+    $teacher->available_worktime()->createMany($request->available_worktime);
+    return $teacher->available_worktime;
+   }
+
 }

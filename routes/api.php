@@ -47,5 +47,6 @@ Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'procc
 
 Route::middleware('check_teacher')->group(function(){
     Route::post('SendAccountForAprrove',[TeacherController::class, 'Register']);
+    Route::post('add_worktime',[TeacherController::class, 'teacher_available_worktime'])->middleware('check_teacher_activate');
 });
 

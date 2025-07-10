@@ -45,5 +45,7 @@ class Teacher extends Authenticatable
     public function University_stage(){
         return $this->belongsToMany(University_stage::class, 'teacher_school_stage', 'teacher_id', 'school_stage_id');
     }
-
+    public function available_worktime(){
+        return $this->hasMany(Teacher_available_worktime::class);
+    }
 }

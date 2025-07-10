@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\TeacherServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TeacherController extends Controller
@@ -39,5 +40,22 @@ class TeacherController extends Controller
         return response()->json(['message'=>'teacher complete account and wait to approvement','teacher'=>$teacher[0],'imageUrl'=>$teacher[1],
     'Certificate_File_Url'=>$teacher[2]]);
 }
-    
+public function update_profile(){
+
+}
+    public function teacher_available_worktime(Request $request){
+        $validate=Validator::make($request->all(),[
+            'available_worktime'=>'required|array',
+            'available_worktime.*.workingDay'=>'required|string',
+            'available_worktime.*.start_time'=>'required|date_format:H:i',
+            'available_worktime.*.end_time' => 'required|date_format:H:i',
+            'available_worktime.*.break_duration_lessons' => 'required|date_format:H:i',
+        ]);
+        if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $workTime=$this->teacher_services->add_worktime($request);
+        return response()->json(['message'=>'teacher adding work time successfully','WorkTime'=>$workTime]);
+    }
+
 }

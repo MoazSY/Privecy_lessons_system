@@ -46,5 +46,15 @@ class StudentController extends Controller
        return response()->json(['message'=>'student profile retrieved successfully',
        'profile'=>$profile]);
     }
+    public function update_profile(){
+
+    }
+    public function filter_result(){
+        
+    }
+    public function get_teacher(){
+
+    }
+
 
 }

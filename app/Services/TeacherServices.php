@@ -37,5 +37,8 @@ protected $teacher_repositories_interface;
     public function UnActivate_account(){
     return $this->teacher_repositories_interface->UnActivate_account();
     }
-
+    public function add_worktime($request){
+        $teacher_id = Auth::guard('teacher')->user()->id;
+        return $this->teacher_repositories_interface->add_worktime($request, $teacher_id);
+    }
 }
