@@ -86,6 +86,8 @@ public function SendAccountForAprrove($request){
    }
    public function get_teacher($school_subjects, $university_subjects){
     $array=[];
+    $schoolSubjects=[];
+    $universitySubjects=[];
     $teachers=Teacher::where('Activate_Account','=',true)->get();
     if($teachers->isEmpty()){
         $array=null;
@@ -96,7 +98,10 @@ public function SendAccountForAprrove($request){
             if($teacher->School_subjects()->exists()){
             foreach($teacher->School_subjects as $teacher_school_subject){
                 if($school_subject->id == $teacher_school_subject->id){
-                $array[] = ['teacher' => $teacher, 'schoolSubjects' => $teacher->School_subjects, 'workTime' => $teacher->available_worktime];
+                    foreach($school_subjects as $S){
+                        $schoolSubjects[]=['subject'=>$S,'imageUrl'=>asset('storage/' .$S->subject_cover_image)];
+                    }
+                $array[] = ['teacher' => $teacher,'teacherImage'=>asset('storage/'.$teacher->image), 'schoolSubjects' => $schoolSubjects, 'workTime' => $teacher->available_worktime];
                     break;
                 }
             }
@@ -115,13 +120,17 @@ public function SendAccountForAprrove($request){
                                 $index = collect($array)->search(function ($item) use ($teacher) {
                                     return $item['teacher']->id === $teacher->id;
                                 });
+                                foreach($university_subjects as $U){
+                                    $universitySubjects[]=['subject'=>$U,'imageUrl'=>asset('storage/' . $U->subject_cover_image)];
+                                }
                                 if($index !== false){
                                     if (!isset($array[$index]['universitySubjects'])) {
                                         $array[$index]['universitySubjects'] = [];
                                     }
-                                     $array[$index]['universitySubjects'][] = $teacher->University_subjects;
+
+                                     $array[$index]['universitySubjects'][] = $universitySubjects;
                                 }else{
-                                 $array[] = ['teacher' => $teacher, 'universitySubjects' => $teacher->University_subjects, 'workTime' => $teacher->available_worktime];
+                                 $array[] = ['teacher' => $teacher,'teacherImage'=>asset('storage/'.$teacher->image), 'universitySubjects' => $universitySubjects, 'workTime' => $teacher->available_worktime];
                                 }
                                 break;
                             }
