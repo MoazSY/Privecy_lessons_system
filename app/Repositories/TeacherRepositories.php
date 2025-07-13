@@ -84,5 +84,54 @@ public function SendAccountForAprrove($request){
     $teacher->available_worktime()->createMany($request->available_worktime);
     return $teacher->available_worktime;
    }
-
+   public function get_teacher($school_subjects, $university_subjects){
+    $array=[];
+    $teachers=Teacher::where('Activate_Account','=',true)->get();
+    if($teachers->isEmpty()){
+        $array=null;
+    }
+    if(!empty($school_subjects)){
+        foreach($school_subjects as $school_subject){
+         foreach($teachers as $teacher){
+            if($teacher->School_subjects()->exists()){
+            foreach($teacher->School_subjects as $teacher_school_subject){
+                if($school_subject->id == $teacher_school_subject->id){
+                $array[] = ['teacher' => $teacher, 'schoolSubjects' => $teacher->School_subjects, 'workTime' => $teacher->available_worktime];
+                    break;
+                }
+            }
+            }else{
+                continue;
+            }
+         }
+        }
+    }
+    if(!empty($university_subjects)){
+        foreach($university_subjects as $university_subject){
+                foreach ($teachers as $teacher) {
+                    if($teacher->University_subjects()->exists()){
+                        foreach($teacher->University_subjects as $teacher_university_subjects){
+                            if($university_subject->id== $teacher_university_subjects->id){
+                                $index = collect($array)->search(function ($item) use ($teacher) {
+                                    return $item['teacher']->id === $teacher->id;
+                                });
+                                if($index !== false){
+                                    if (!isset($array[$index]['universitySubjects'])) {
+                                        $array[$index]['universitySubjects'] = [];
+                                    }
+                                     $array[$index]['universitySubjects'][] = $teacher->University_subjects;
+                                }else{
+                                 $array[] = ['teacher' => $teacher, 'universitySubjects' => $teacher->University_subjects, 'workTime' => $teacher->available_worktime];
+                                }
+                                break;
+                            }
+                        }
+                    }else{
+                        continue;
+                    }
+                }
+                }
+    }
+    return $array;
+   }
 }

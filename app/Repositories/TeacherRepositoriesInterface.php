@@ -9,4 +9,5 @@ namespace App\Repositories;
     public function Teacher_university_subjects($teacher,$subjects,$request);
     public function UnActivate_account();
     public function add_worktime($request,$teacher_id);
+    public function get_teacher($school_subjects,$university_subjects);
  }

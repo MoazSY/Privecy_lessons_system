@@ -8,15 +8,18 @@ use App\Models\University_stage;
 use App\Repositories\StudentRepositoriesInterface;
 use Illuminate\Http\Request;
 use App\Services\StudentServices;
+use App\Services\TeacherServices;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
     protected $student_services;
-    public function __construct(StudentServices $student_services)
+    protected $teacher_services;
+    public function __construct(StudentServices $student_services,TeacherServices $teacher_services)
     {
         $this->student_services=$student_services;
+        $this->teacher_services=$teacher_services;
     }
 
     public function Profile_complete(Request $request){
@@ -50,10 +53,14 @@ class StudentController extends Controller
 
     }
     public function filter_result(){
-        
+
     }
     public function get_teacher(){
-
+    $results=$this->teacher_services->get_teacher();
+    if($results==null){
+        return response()->json(['message'=>"system dont have any teachers for you",404]);
+    }
+    return response()->json(['message'=>'teachers for you','teachers'=>$results]);
     }
 
 

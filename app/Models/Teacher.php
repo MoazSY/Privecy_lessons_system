@@ -37,13 +37,13 @@ class Teacher extends Authenticatable
     }
     public function School_subjects()
     {
-        return $this->belongsToMany(School_subjects::class, 'teacher_school_subjects', 'teacher_id', 'school_subject_id')->withPivot('lesson_duration', 'lesson_price')->withTimestamps();
+    return $this->belongsToMany(School_subjects::class, 'teacher_school_subjects', 'teacher_id', 'school_subject_id')->withPivot('lesson_duration', 'lesson_price')->withTimestamps();
     }
     public function School_stage(){
     return $this->belongsToMany(School_stage::class, 'teacher_school_stage', 'teacher_id', 'school_stage_id');
     }
     public function University_stage(){
-        return $this->belongsToMany(University_stage::class, 'teacher_school_stage', 'teacher_id', 'school_stage_id');
+        return $this->belongsToMany(University_stage::class, 'teacher_university_stage', 'teacher_id', 'university_stage_id');
     }
     public function available_worktime(){
         return $this->hasMany(Teacher_available_worktime::class);

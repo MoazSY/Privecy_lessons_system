@@ -106,11 +106,17 @@ class Stages_subjects{
     {
         $token = PersonalAccessToken::findToken($request->bearerToken());
         $user = $token->tokenable;
+        
         if($user instanceof \App\Models\Students){
+            // return $user;
             return  $this->student_repositories_interface->UniversityStage($user->id, $university_stage_id);
         }
         elseif($user instanceof \App\Models\Teacher){
+            // return $user;
             return $this->teacherRepositoriesInterface->UniversityStage($user->id,$university_stage_id);
+        }
+        else{
+        return null;
         }
     }
 

@@ -73,6 +73,7 @@ class StagesSubjectsController extends Controller
         }
         $university_stage_id = $request->input('university_stage_id');
         $university_stage = $this->stages_subjects->Choose_university_stage($request,$university_stage_id);
+        
         return response()->json(['message' => 'university stage added successfully', 'result' => $university_stage]);
     }
 

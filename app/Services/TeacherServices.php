@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Students;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepositories;
 use App\Repositories\TeacherRepositoriesInterface;
@@ -40,5 +41,16 @@ protected $teacher_repositories_interface;
     public function add_worktime($request){
         $teacher_id = Auth::guard('teacher')->user()->id;
         return $this->teacher_repositories_interface->add_worktime($request, $teacher_id);
+    }
+
+    public function get_teacher(){
+        $student_id=Auth::guard('student')->user()->id;
+        $student=Students::findOrFail($student_id);
+        if($student->Subjects()->exists()||$student->Univesity_subjects()->exists()){
+            $school_subjects=$student->Subjects;
+            $university_subjects=$student->Univesity_subjects;
+            return $this->teacher_repositories_interface->get_teacher($school_subjects,$university_subjects);
+        }
+        return null;
     }
 }
