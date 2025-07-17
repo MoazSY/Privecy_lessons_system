@@ -17,6 +17,16 @@ $teacher->Activate_Account=false;
 $teacher->save();
 return $teacher;
 }
+public function teacher_profile($teacher){
+$teacher=Teacher::with([
+'School_stage',
+'School_subjects',
+'University_stage',
+'University_subjects',
+'available_worktime'
+])->find($teacher->id);
+return $teacher;
+}
 public function SendAccountForAprrove($request){
 
 }
@@ -24,6 +34,10 @@ public function SendAccountForAprrove($request){
         $teacher = Teacher::findOrFail($teacher_id);
         $result = $teacher->School_stage()->sync($school_stage_id);
         $attachedStage = School_stage::whereIn('id', $result['attached'])->get();
+        if(!empty($result['attached'])){
+            $teacher->Activate_Account=false;
+            $teacher->save();
+        }
         return $attachedStage;
    }
     public function TeacherSchoolSubjects($teacher_id, $subjects, $request)
@@ -39,9 +53,11 @@ public function SendAccountForAprrove($request){
             }
         }
         $result = $teacher->School_subjects()->sync($pivotData);
-
         $attachedSubjects = School_subjects::whereIn('id', $result['attached'])->get();
-
+        if(!empty($result['attached'])){
+            $teacher->Activate_Account=false;
+            $teacher->save();
+        }
         return $attachedSubjects;
     }
 
@@ -49,6 +65,10 @@ public function SendAccountForAprrove($request){
         $teacher = Teacher::findOrFail($teacher_id);
         $result = $teacher->University_stage()->sync($university_stage_id);
         $attachedStage = University_stage::whereIn('id', $result['attached'])->get();
+            if(!empty($result['attached'])){
+            $teacher->Activate_Account=false;
+            $teacher->save();
+        }
         return $attachedStage;
    }
    public function Teacher_university_subjects($teacher,$subjects,$request){
@@ -64,6 +84,10 @@ public function SendAccountForAprrove($request){
         }
         $result = $teacher->University_subjects()->sync($pivotData);
         $attached = University_subjects::whereIn('id', $result['attached'])->get();
+             if(!empty($result['attached'])){
+            $teacher->Activate_Account=false;
+            $teacher->save();
+        }
         return $attached;
    }
 

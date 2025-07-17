@@ -22,7 +22,6 @@ class StudentServices{
     $this->token_repositories_interface=$token_repositories_interface;
     }
 
-
     public function Profile_complate($request,$data){
         $student_id = Auth::guard('student')->user()->id;
         $student = Students::where('id', '=', $student_id)->first();
@@ -31,7 +30,15 @@ class StudentServices{
             $path=$request->file('image')->storeAs('students/images',$originalName,'public');
             $data['image']=$path;
             $imageUrl = asset('storage/' . $path);
-        }else{$imageUrl=null;}
+        }else{
+            if($student->image==null){
+                $imageUrl=null;
+            }
+            else{
+            $imageUrl = asset('storage/' .$student->image);
+
+            }
+        }
         if(!empty($data['password'])){
             $data['password']=Hash::make($data['password']);
         }

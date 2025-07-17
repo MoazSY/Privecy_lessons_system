@@ -49,8 +49,23 @@ class StudentController extends Controller
        return response()->json(['message'=>'student profile retrieved successfully',
        'profile'=>$profile]);
     }
-    public function update_profile(){
-
+    public function update_profile(Request $request){
+            $validator=Validator::make($request->all(),[
+            "firstName"=> 'sometimes|string|max:255',
+            "lastName"=> 'sometimes|string|max:255',
+            "birthdate"=> 'sometimes|date',
+            "email"=>'sometimes|email',
+            "password"=> 'sometimes|min:8|alpha_num',
+            "about_him"=> 'sometimes|string|max:255',
+            'image' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'accountNumber'=>'sometimes|string'
+        ]);
+        if($validator->fails()){
+            return response()->json(['message'=>$validator->errors()]);
+        }
+        $data=$validator->validated();
+       $student= $this->student_services->Profile_complate($request,$data);
+        return response()->json(['message'=>'student profile complete','student'=>$student[0],'imageurl'=>$student[1]]);
     }
     public function filter_result(){
 
@@ -62,6 +77,8 @@ class StudentController extends Controller
     }
     return response()->json(['message'=>'teachers for you','teachers'=>$results]);
     }
+
+
 
 
 }

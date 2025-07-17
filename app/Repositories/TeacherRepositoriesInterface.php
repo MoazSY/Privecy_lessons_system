@@ -2,6 +2,7 @@
 namespace App\Repositories;
  interface TeacherRepositoriesInterface{
     public function create($request);
+    public function teacher_profile($teacher);
     public function SendAccountForAprrove($request);
     public function teacherSchoolStage($teacher_id,$school_stage_id);
     public function TeacherSchoolSubjects($teacher,$subjects,$request);

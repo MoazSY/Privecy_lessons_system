@@ -35,6 +35,7 @@ Route::middleware('check_students')->group(function(){
 
     Route::post('Profile_complete',[StudentController::class, 'Profile_complete']);
     Route::get('Student_profile',[StudentController::class, 'Student_profile']);
+    Route::post('update_profile',[StudentController::class,'update_profile']);
     Route::get('get_teacher',[StudentController::class,'get_teacher']);
 });
 Route::middleware('check_admin')->group(function(){
@@ -48,6 +49,8 @@ Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'procc
 
 Route::middleware('check_teacher')->group(function(){
     Route::post('SendAccountForAprrove',[TeacherController::class, 'Register']);
+    Route::get('teacher_profile',[TeacherController::class,'teacher_profile']);
+    Route::post('update_teacher_profile',[TeacherController::class,'update_profile']);
     Route::post('add_worktime',[TeacherController::class, 'teacher_available_worktime'])->middleware('check_teacher_activate');
 });
 
