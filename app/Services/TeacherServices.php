@@ -75,4 +75,82 @@ protected $teacher_repositories_interface;
         }
         return null;
     }
+    public function teacher_filter($request){
+        $array=[];
+        $query=Teacher::query();
+        $query->where('Activate_Account',true);
+
+        if($request->filled('gender')){
+        $query->where('gender',$request->input('gender'));
+        }
+        if($request->filled('stage_type')){
+            if($request->stage_type=='school'){
+                if($request->filled('study_stage_id')){
+                $query->whereHas('School_stage',function($q)use ($request){
+                    $q->where('id', $request->input('study_stage_id'));
+                });
+                if($request->filled('stage_subject_id')){
+                    $query->whereHas('School_subjects',function($q)use ($request){
+                        $q->where('school_stage_id',$request->input('study_stage_id'))->where('id',$request->input('stage_subject_id'));
+                    });
+                }
+                }
+                else{
+                $query->whereHas('School_stage');
+                }
+                    if($request->filled('min_price') && $request->filled('max_price')){
+                    $query->whereHas('School_subjects',function($q) use($request){
+                    $q->whereRaw('teacher_school_subjects.lesson_price BETWEEN ? AND ?', [
+                    $request->input('min_price'),
+                    $request->input('max_price'),
+                    ]);
+                    });
+                }
+            }
+            if($request->stage_type=='university'){
+                if($request->filled('study_stage_id')){
+                $query->whereHas('University_stage',function($q)use ($request){
+                    $q->where('id', $request->input('study_stage_id'));
+                });
+                     if($request->filled('stage_subject_id')){
+                    $query->whereHas('University_subjects',function($q)use ($request){
+                        $q->where('university_stage_id',$request->input('study_stage_id'))->where('id',$request->input('stage_subject_id'));
+                    });
+                }
+                }else{
+                $query->whereHas('University_stage');
+                }
+                    if($request->filled('min_price') && $request->filled('max_price')){
+                    $query->whereHas('University_subjects',function($q) use($request){
+                    $q->whereRaw('teacher_university_subjects.lesson_price BETWEEN ? AND ?', [
+                    $request->input('min_price'),
+                    $request->input('max_price'),
+                    ]);
+                    });
+                }
+            }
+         }
+            if($request->filled('work_available_day')){
+            $query->whereHas('available_worktime',function($q)use($request){
+            $q->where('workingDay',$request->input('work_available_day'));
+            });
+            if($request->filled('work_available_time')){
+            $query->whereHas('available_worktime',function($q)use($request){
+            $q->where('workingDay',$request->input('work_available_day'))->whereTime('start_time', '<=', $request->input('work_available_time'))
+            ->whereTime('end_time', '>=', $request->input('work_available_time'));
+            });
+            // هنا يتم الفلترة على وقت العمل يجب اضافة وقت الاتاحة اي عدم الحجز
+            }
+            }
+                $teachers=$query->get();
+                foreach($teachers as $teacher){
+                    $array[] = [
+                        "teacher" => $teacher,
+                        "teacherImageUrl" => asset('storage/'.$teacher->image),
+                        "subjects" => $request->stage_type == 'school' ? $teacher->School_subjects : $teacher->University_subjects,
+                        "workTime" => $teacher->available_worktime,
+                    ];
+                }
+        return $array;
+    }
 }

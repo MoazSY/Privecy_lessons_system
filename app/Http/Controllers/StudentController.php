@@ -67,9 +67,25 @@ class StudentController extends Controller
        $student= $this->student_services->Profile_complate($request,$data);
         return response()->json(['message'=>'student profile complete','student'=>$student[0],'imageurl'=>$student[1]]);
     }
-    public function filter_result(){
-
+    public function filter_result(Request $request){
+        $validate=Validator::make($request->all(),[
+             "gender"=> 'sometimes|in:male,female',
+             "stage_type"=>'required|in:school,university',
+             "study_stage_id"=>'sometimes|integer',
+             "stage_subject_id"=>"sometimes|integer",
+             "work_available_day"=>'sometimes|string',
+             "work_available_time"=>'sometimes|date_format:H:i',
+             'min_price'=>'sometimes|numeric|min:0',
+             'max_price'=>'sometimes|numeric',
+             'rate'=>'sometimes|numeric|min:0'
+        ]);
+        if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $teachers=$this->teacher_services->teacher_filter($request);
+        return response()->json(['message'=>'all filter teachers','teacher'=>$teachers]);
     }
+
     public function get_teacher(){
     $results=$this->teacher_services->get_teacher();
     if($results==null){

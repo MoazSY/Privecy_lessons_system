@@ -37,6 +37,8 @@ Route::middleware('check_students')->group(function(){
     Route::get('Student_profile',[StudentController::class, 'Student_profile']);
     Route::post('update_profile',[StudentController::class,'update_profile']);
     Route::get('get_teacher',[StudentController::class,'get_teacher']);
+    Route::post('teacher_filter',[StudentController::class,'filter_result']);
+
 });
 Route::middleware('check_admin')->group(function(){
 Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);
