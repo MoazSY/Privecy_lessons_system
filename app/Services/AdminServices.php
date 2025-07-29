@@ -66,10 +66,7 @@ public function Regester($request){
             $token = $admin->createToken('authToken')->plainTextToken;
             $this->token_repositories_interface->Add_expierd_token($token);
             $refresh_token = $this->token_repositories_interface->Add_refresh_token($token);
-            
-    
-
-    return ['admin'=>$admin,'token'=>$token,'refresh_token'=>$refresh_token,'imageUrl'=>$imageUrl];
+            return ['admin'=>$admin,'token'=>$token,'refresh_token'=>$refresh_token,'imageUrl'=>$imageUrl];
     }
 public function login($request){
         $credentials = $request->only('email', 'password');

@@ -127,13 +127,12 @@ protected $teacher_repositories_interface;
                     $request->input('max_price'),
                     ]);
                     });
-                }
-            }
-         }
+                }}}
             if($request->filled('work_available_day')){
             $query->whereHas('available_worktime',function($q)use($request){
             $q->where('workingDay',$request->input('work_available_day'));
             });
+            // يجب اضافة فلتلرة المتاح الان
             if($request->filled('work_available_time')){
             $query->whereHas('available_worktime',function($q)use($request){
             $q->where('workingDay',$request->input('work_available_day'))->whereTime('start_time', '<=', $request->input('work_available_time'))
@@ -141,6 +140,9 @@ protected $teacher_repositories_interface;
             });
             // هنا يتم الفلترة على وقت العمل يجب اضافة وقت الاتاحة اي عدم الحجز
             }
+            }
+            if($request->filled('rating')){
+                // $query->>whereHas();
             }
                 $teachers=$query->get();
                 foreach($teachers as $teacher){
@@ -152,5 +154,9 @@ protected $teacher_repositories_interface;
                     ];
                 }
         return $array;
+    }
+    public function Rating($request,$teacher){
+        $student=Auth::guard('student')->user()->id;
+        return $this->teacher_repositories_interface->Rating($request,$student,$teacher);
     }
 }

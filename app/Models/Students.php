@@ -53,4 +53,7 @@ class Students extends Authenticatable
     public function Univesity_subjects(){
         return $this->belongsToMany(University_subjects::class, 'university_student_subject', 'student_id', 'university_subject');
     }
+    public function Rating(){
+        return $this->belongsToMany(Teacher::class,'teacher_rating','student_id','teacher_id')->withPivot("rate")->withTimestamps();
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\School_stage;
 use App\Models\School_subjects;
 use App\Models\Teacher;
+use App\Models\Students;
 use App\Models\Teacher_school_subjects;
 use App\Models\Teacher_university_stage;
 use App\Models\University_stage;
@@ -131,10 +132,7 @@ public function SendAccountForAprrove($request){
             }
             }else{
                 continue;
-            }
-         }
-        }
-    }
+            }}}}
     if(!empty($university_subjects)){
         foreach($university_subjects as $university_subject){
                 foreach ($teachers as $teacher) {
@@ -161,10 +159,14 @@ public function SendAccountForAprrove($request){
                         }
                     }else{
                         continue;
-                    }
-                }
-                }
-    }
+                    }}}}
     return $array;
+   }
+   public function Rating($request,$student,$teacher){
+    $student=Students::findOrFail($student);
+    $result= $student->Rating()->sync([$teacher->id=>['rate'=>$request->rate]]);
+    $affectedIds = array_merge($result['attached'], $result['updated']);
+    $attachedTeacher=Teacher::whereIn('id',$affectedIds)->get();
+    return $attachedTeacher;
    }
 }

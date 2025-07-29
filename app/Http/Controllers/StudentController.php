@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\School_stage;
 use App\Models\Students;
 use App\Models\University_stage;
+use App\Models\Teacher;
 use App\Repositories\StudentRepositoriesInterface;
 use Illuminate\Http\Request;
 use App\Services\StudentServices;
@@ -93,7 +94,16 @@ class StudentController extends Controller
     }
     return response()->json(['message'=>'teachers for you','teachers'=>$results]);
     }
-
+    public function Rating_teacher(Request $request,Teacher $teacher){
+        $validate=Validator::make($request->all(),[
+            "rate"=>'required|integer|min:1|max:5'
+        ]);
+    if($validate->fails()){
+    return response()->json(['message'=>$validate->errors()]);
+    }
+    $rating= $this->teacher_services->Rating($request,$teacher);
+    return response()->json(['message'=>'student has rated teacher','rate'=>$request->rate,'teacher'=>$rating]);
+    }
 
 
 

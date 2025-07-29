@@ -11,4 +11,5 @@ namespace App\Repositories;
     public function UnActivate_account();
     public function add_worktime($request,$teacher_id);
     public function get_teacher($school_subjects,$university_subjects);
+    public function Rating($request,$student,$teacher);
  }
