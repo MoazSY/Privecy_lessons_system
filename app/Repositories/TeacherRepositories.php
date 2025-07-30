@@ -164,9 +164,17 @@ public function SendAccountForAprrove($request){
    }
    public function Rating($request,$student,$teacher){
     $student=Students::findOrFail($student);
-    $result= $student->Rating()->sync([$teacher->id=>['rate'=>$request->rate]]);
+    $result= $student->Rating()->syncWithoutDetaching([$teacher->id=>['rate'=>$request->rate]]);
     $affectedIds = array_merge($result['attached'], $result['updated']);
     $attachedTeacher=Teacher::whereIn('id',$affectedIds)->get();
     return $attachedTeacher;
    }
-}
+   public function following($request,$student,$teacher){
+    $student=Students::findOrFail($student);
+    $result=$student->following()->syncWithoutDetaching([$teacher->id=>['following_state'=>$request->following_state
+    ,'recieve_notifications'=>$request->recieve_notifications]]);
+    $affectedIds = array_merge($result['attached'], $result['updated']);
+    $attachedTeacher=Teacher::whereIn('id',$affectedIds)->get();
+    return $attachedTeacher;
+   }
+ }

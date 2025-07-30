@@ -12,4 +12,5 @@ namespace App\Repositories;
     public function add_worktime($request,$teacher_id);
     public function get_teacher($school_subjects,$university_subjects);
     public function Rating($request,$student,$teacher);
+    public function following($request,$student,$teacher); 
  }

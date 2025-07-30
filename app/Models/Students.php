@@ -56,4 +56,7 @@ class Students extends Authenticatable
     public function Rating(){
         return $this->belongsToMany(Teacher::class,'teacher_rating','student_id','teacher_id')->withPivot("rate")->withTimestamps();
     }
+    public function Following(){
+        return $this->belongsToMany(Teacher::class,'teacher_following','student_id','teacher_id')->withPivot('following_state','recieve_notifications')->withTimestamps();
+    }
 }

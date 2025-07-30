@@ -77,8 +77,13 @@ protected $teacher_repositories_interface;
     }
     public function teacher_filter($request){
         $array=[];
-        $query=Teacher::query();
-        $query->where('Activate_Account',true);
+        // $query=Teacher::query();
+    //    $query= Teacher::select('teacher.*');
+        $query = Teacher::withAvg('Rating', 'rate')
+        ->with(['School_subjects', 'University_subjects', 'available_worktime'])
+        ->where('Activate_Account', true);
+
+        // $query->where('Activate_Account',true);
 
         if($request->filled('gender')){
         $query->where('gender',$request->input('gender'));
@@ -141,22 +146,27 @@ protected $teacher_repositories_interface;
             // هنا يتم الفلترة على وقت العمل يجب اضافة وقت الاتاحة اي عدم الحجز
             }
             }
-            if($request->filled('rating')){
-                // $query->>whereHas();
-            }
-                $teachers=$query->get();
-                foreach($teachers as $teacher){
-                    $array[] = [
-                        "teacher" => $teacher,
-                        "teacherImageUrl" => asset('storage/'.$teacher->image),
-                        "subjects" => $request->stage_type == 'school' ? $teacher->School_subjects : $teacher->University_subjects,
-                        "workTime" => $teacher->available_worktime,
-                    ];
+            if ($request->filled('rate')) {
+                 $query->having('rating_avg_rate', '>=', $request->input('rate'));
                 }
-        return $array;
+
+            $result = $query->get()->map(function ($teacher) use ($request) {
+                return [
+                    "teacher" => $teacher,
+                    "teacherImageUrl" => asset('storage/' . $teacher->image),
+                    "subjects" => $request->stage_type == 'school' ? $teacher->School_subjects : $teacher->University_subjects,
+                    "workTime" => $teacher->available_worktime,
+                    "rating_avg" => $teacher->rating_avg_rate,
+                ];
+            });
+            return $result;
     }
     public function Rating($request,$teacher){
         $student=Auth::guard('student')->user()->id;
         return $this->teacher_repositories_interface->Rating($request,$student,$teacher);
+    }
+    public function following($request,$teacher){
+        $student=Auth::guard('student')->user()->id;
+        return $this->teacher_repositories_interface->following($request,$student,$teacher);
     }
 }

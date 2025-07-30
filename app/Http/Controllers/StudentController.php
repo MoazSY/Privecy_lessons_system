@@ -78,7 +78,7 @@ class StudentController extends Controller
              "work_available_time"=>'sometimes|date_format:H:i',
              'min_price'=>'sometimes|numeric|min:0',
              'max_price'=>'sometimes|numeric',
-             'rate'=>'sometimes|numeric|min:0'
+             'rate'=>'sometimes|numeric|min:1|max:5'
         ]);
         if($validate->fails()){
             return response()->json(['message'=>$validate->errors()]);
@@ -103,6 +103,18 @@ class StudentController extends Controller
     }
     $rating= $this->teacher_services->Rating($request,$teacher);
     return response()->json(['message'=>'student has rated teacher','rate'=>$request->rate,'teacher'=>$rating]);
+    }
+    public function Following_teacher(Request $request,Teacher $teacher){
+        $validate=Validator::make($request->all(),[
+            'following_state'=>'required|boolean',
+            'recieve_notifications'=>'required|boolean'
+        ]);
+        if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $result=$this->teacher_services->following($request,$teacher);
+        return response()->json(['message'=>'student has followed teacher','following'=>$result]);
+
     }
 
 
