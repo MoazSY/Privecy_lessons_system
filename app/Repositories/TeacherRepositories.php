@@ -19,7 +19,9 @@ $teacher->save();
 return $teacher;
 }
 public function teacher_profile($teacher){
-$teacher=Teacher::withAvg('Rating', 'rate')->with([
+$teacher=Teacher::withAvg('Rating', 'rate')
+->withCount(['folowing_value' => fn($q) => $q->where('following_state', true)])
+->with([
 'School_stage',
 'School_subjects',
 'University_stage',
@@ -113,7 +115,9 @@ public function SendAccountForAprrove($request){
     $array=[];
     $schoolSubjects=[];
     $universitySubjects=[];
-    $teachers=Teacher::withAvg('Rating', 'rate')->where('Activate_Account','=',true)->get();
+    $teachers=Teacher::withAvg('Rating', 'rate')
+    ->withCount(['folowing_value' => fn($q) => $q->where('following_state', true)])
+    ->where('Activate_Account','=',true)->get();
     if($teachers->isEmpty()){
         $array=null;
     }

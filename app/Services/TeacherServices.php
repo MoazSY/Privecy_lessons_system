@@ -79,7 +79,8 @@ protected $teacher_repositories_interface;
         $array=[];
         // $query=Teacher::query();
     //    $query= Teacher::select('teacher.*');
-        $query = Teacher::withAvg('Rating', 'rate')
+        $query = Teacher::withAvg('Rating', 'rate')->
+        withCount(['folowing_value' => fn($q) => $q->where('following_state', true)])
         ->with(['School_subjects', 'University_subjects', 'available_worktime'])
         ->where('Activate_Account', true);
 

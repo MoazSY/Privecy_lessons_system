@@ -49,16 +49,19 @@ class Teacher extends Authenticatable
         return $this->hasMany(Teacher_available_worktime::class);
     }
 
-
      public function Rating(){
         return $this->hasMany(Teacher_rating::class,'teacher_id');
      }
-    public function getAverageRating()
-{
-    return $this->Rating()->avg('rate');
-}
+//     public function getAverageRating()
+// {
+//     return $this->Rating()->avg('rate');
+// }
+
     public function folowing_value(){
-        return $this->hasMany(Teacher_rating::class,'teacher_id');
+        return $this->hasMany(Teacher_following::class,'teacher_id');
     }
+    // public function rate_following(){
+    //     return $this->folowing_value()->where('following_state',true)->count();
+    // }
 }
 
