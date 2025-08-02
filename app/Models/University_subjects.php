@@ -25,4 +25,8 @@ class University_subjects extends Model
     public function Teachers(){
         return $this->belongsToMany(Teacher::class, 'teacher_university_stage', 'teacher_id', 'university_subjects_id')->withPivot('lesson_duration', 'lesson_price')->withTimestamps();
     }
+
+        public function subject_table(){
+        return $this->morphMany(Lesson_reservation::class,'subjectable');
+    }
 }

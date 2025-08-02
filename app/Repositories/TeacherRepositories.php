@@ -181,4 +181,7 @@ public function SendAccountForAprrove($request){
     $attachedTeacher=Teacher::whereIn('id',$affectedIds)->get();
     return $attachedTeacher;
    }
+   public function get_Available_reservations($teacher,$subject){
+    
+   }
  }

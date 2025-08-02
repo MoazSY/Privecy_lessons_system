@@ -40,6 +40,7 @@ Route::middleware('check_students')->group(function(){
     Route::post('teacher_filter',[StudentController::class,'filter_result']);
     Route::post('teacher_Rating/{teacher}',[StudentController::class,'Rating_teacher']);
     Route::post('teacher_following/{teacher}',[StudentController::class,'Following_teacher']);
+    Route::post('getWeeklyAvailableSlots_reservations',[StudentController::class,'getWeeklyAvailableSlots_reservations']);
 
 });
 Route::middleware('check_admin')->group(function(){

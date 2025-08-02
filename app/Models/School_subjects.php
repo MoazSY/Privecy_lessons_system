@@ -23,4 +23,7 @@ class School_subjects extends Model
     public function Students(){
         return $this->belongsToMany(Students::class, 'student_subject', 'student_id', 'subject_id');
     }
+    public function subject_table(){
+        return $this->morphMany(Lesson_reservation::class,'subjectable');
+    }
 }
