@@ -78,7 +78,7 @@ class StudentServices{
                 $duration = Carbon::createFromFormat('H:i:s', $lesson_duration);
                 $lesson_duration = $duration->hour * 60 + $duration->minute;
 
-                $startOfWeek = now()->startOfWeek(Carbon::SATURDAY);
+                $startOfWeek = now();
                 $result = [];
             foreach ($teacher->available_worktime as $worktime) {
             $dayName = $worktime->workingDay;
@@ -101,10 +101,9 @@ class StudentServices{
                     return ['start' => $start, 'end' => $end];
                 })->sortBy('start')->values();
 
-
             $freePeriods = [];
             $cursor = $workStart->copy();
-
+            
             foreach ($reservations as $res) {
             // إذا كان هناك فراغ بين المؤشر وبداية الحجز
             if ($cursor->lt($res['start'])) {
@@ -136,7 +135,6 @@ class StudentServices{
                 $slotStart = $slotEnd->copy()->addMinutes($break_lessons);
             }
         }
-
         $reservedSlots = $reservations->map(function ($res) use ($dayDate) {
             return [
                 'start' => $res['start']->format('H:i'),
@@ -145,7 +143,6 @@ class StudentServices{
                 'status'=> 'reserved',
             ];
         })->toArray();
-
                 //  دمج الحُجوزات مع الأوقات المتاحة
         $allSlots = array_merge($reservedSlots, $availableSlots);
 

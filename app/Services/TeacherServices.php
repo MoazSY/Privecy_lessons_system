@@ -93,7 +93,7 @@ protected $teacher_repositories_interface;
             if($request->stage_type=='school'){
                 if($request->filled('study_stage_id')){
                 $query->whereHas('School_stage',function($q)use ($request){
-                    $q->where('id', $request->input('study_stage_id'));
+                    $q->where('school_stage.id', $request->input('study_stage_id'));
                 });
                 if($request->filled('stage_subject_id')){
                     $query->whereHas('School_subjects',function($q)use ($request){
@@ -116,7 +116,7 @@ protected $teacher_repositories_interface;
             if($request->stage_type=='university'){
                 if($request->filled('study_stage_id')){
                 $query->whereHas('University_stage',function($q)use ($request){
-                    $q->where('id', $request->input('study_stage_id'));
+                    $q->where('University_stage.id', $request->input('study_stage_id'));
                 });
                      if($request->filled('stage_subject_id')){
                     $query->whereHas('University_subjects',function($q)use ($request){
