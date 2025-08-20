@@ -24,7 +24,8 @@ class Students extends Authenticatable
         "gender",
         "accountNumber",
         "is_profile_completed ",
-        "about_him"
+        "about_him",
+        "CardValue"
      ];
      protected $hidden=[
         "password",
@@ -61,5 +62,8 @@ class Students extends Authenticatable
     }
      public function Reservations(){
         return $this->hasMany(Lesson_reservation::class);
+    }
+    public function card_charging(){
+        return $this->hasMany(Student_card_charging::class);
     }
 }

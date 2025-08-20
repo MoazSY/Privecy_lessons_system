@@ -21,7 +21,9 @@ return new class extends Migration
             $table->string("image")->nullable();
             $table->date("birthdate");
             $table->enum("gender",["male","female"]);
+            $table->boolean('SuperAdmin')->default(false);
             $table->string("bankAccount");
+            $table->integer('CardValue')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

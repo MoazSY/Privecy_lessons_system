@@ -22,15 +22,19 @@ class Admin extends Authenticatable
         'image',
         'birthdate',
         'gender',
-        'bankAccount'
+        'bankAccount',
+        'SuperAdmin',
+        "CardValue"
     ];
 
     public function refreshTokens()
     {
         return $this->morphMany(RefreshToken::class, 'user_table');
     }
-
     public function TeacherAccount(){
         return $this->belongsToMany(Teacher::class, 'teacher_account_for_register', 'admin_id','teacher_id')->withPivot('state', 'cause_of_reject')->withTimestamps();
+    }
+    public function Card_charging(){
+        return $this->belongsToMany(Students::class,'student_card_charging','admin_id','students_id')->withPivot('card_charging','charging_time')->withTimestamps();
     }
 }

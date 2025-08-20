@@ -84,7 +84,7 @@ class StudentServices{
             $dayName = $worktime->workingDay;
             $workStart = Carbon::createFromFormat('H:i:s', $worktime->start_time);
             $workEnd   = Carbon::createFromFormat('H:i:s', $worktime->end_time);
-            $dayDate   = $startOfWeek->copy()->next($dayName)->format('Y-m-d');
+            $dayDate   = $startOfWeek->copy()->nextOrCurrent($dayName)->format('Y-m-d');
             $break_lessons=$worktime->break_duration_lessons;//
             $duration_break=Carbon::createFromFormat('H:i:s',$break_lessons);
             $break_lessons=$duration_break->hour * 60 + $duration_break->minute;

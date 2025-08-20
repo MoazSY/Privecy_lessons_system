@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId("teacher_id")->references("id")->on("teacher")->onDelete("cascade");
             $table->foreignId("student_id")->references("id")->on("students")->onDelete("cascade");
             $table->dateTime("reservation_time");
-            // $table->integer("duration");
+            $table->integer("duration");
             $table->string("reservation_day");
             $table->enum("state_reservation",["Watting_approve","accepted","rejectd"]);
             $table->morphs("subjectable");

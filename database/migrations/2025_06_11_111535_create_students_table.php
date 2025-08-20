@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string("accountNumber")->unique()->nullable();
             $table->text("about_him")->nullable();
             $table->boolean('is_profile_completed')->nullable();
+            $table->integer('CardValue')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum("gender",["male","female"])->nullable();
             $table->string("account_number")->nullable();
             $table->boolean('Activate_Account')->nullable();
+            $table->integer('CardValue')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

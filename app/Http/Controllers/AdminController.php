@@ -154,4 +154,15 @@ class AdminController extends Controller
         $proccess_account=$this->admin_services->proccess_teacher_account($teacher,$request);
         return response()->json(['message'=>'teacher account proccess successfully']);
     }
+    public function student_card_charging(Request $request){
+        $validate=Validator::make($request->all(),[
+            'student_id',
+            'card_charging',
+        ]);
+        if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $charging=$this->admin_services->card_charging($request);
+        return response()->json(['message'=>'student card is charging successfully','charging_card'=>$charging]);
+    }
 }

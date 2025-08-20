@@ -162,4 +162,8 @@ public function login($request){
         }
         return $this->admin_repositories_interface->proccess_teacher_account($teacher, $request);
     }
+    public function card_charging($request){
+        $admin_id=Auth::guard('admin')->user()->id;
+        return $this->admin_repositories_interface->charging_card($admin_id,$request);
+    }
 }

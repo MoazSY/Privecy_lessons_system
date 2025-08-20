@@ -25,7 +25,8 @@ class Teacher extends Authenticatable
         'password',
         'gender',
         'account_number',
-        'Activate_Account'
+        'Activate_Account',
+        "CardValue"
     ];
 
     public function refreshTokens()

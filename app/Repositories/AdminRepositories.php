@@ -9,6 +9,8 @@ use App\Models\School_subjects;
 use App\Models\Teacher;
 use App\Models\University_stage;
 use App\Models\University_subjects;
+use App\Models\Student_card_charging;
+use App\Models\Students;
 use App\Repositories\AdminRepositoriesInterface ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -174,6 +176,15 @@ use Illuminate\Support\Facades\Hash;
         //notify teacher
 
         return ;
+    }
+    public function charging_card($admin_id,$request){
+        $admin=Admin::findOrFail($admin_id);
+        $admin->Card_charging()->attach([$request->student_id=>['card_charging'=>$request->card_charging,'charging_time'=>now()]]);
+        $chargingCards=Student_card_charging::where('admin_id','=',$admin_id)->orderBy('charging_time','desc')->first();
+        $student=Students::findOrFail($request->student_id);
+        $student->CardValue+=$request->card_charging;
+        $student->save();
+        return $chargingCards;
     }
 
 }
