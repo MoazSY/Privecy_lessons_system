@@ -38,6 +38,34 @@ class AdminController extends Controller
         return response()->json(['message'=>'admin register successfully','admin'=>$result['admin'],'token'=>$result['token'],'refresh_token'=>$result['refresh_token'],
         'imageUrl'=>$result['imageUrl']]);
     }
+    public function Admin_profile(){
+       $profile= $this->admin_services->Admin_profile();
+       if(!$profile){
+        return response()->json(['message'=>'admin profile not found',404]);
+       }
+       return response()->json(['message'=>'admin profile retrieved successfully',
+       'profile'=>$profile]);
+    }
+
+    public function update_profile(Request $request){
+            $validator=Validator::make($request->all(),[
+            "firstName"=> 'sometimes|string|max:255',
+            "lastName"=> 'sometimes|string|max:255',
+            "birthdate"=> 'sometimes|date',
+            "email"=>'sometimes|email',
+            "password"=> 'sometimes|min:8|alpha_num',
+            'image' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'bankAccount'=>'sometimes|string'
+        ]);
+        if($validator->fails()){
+            return response()->json(['message'=>$validator->errors()]);
+        }
+        $data=$validator->validated();
+       $admin= $this->admin_services->profile_update($request,$data);
+        return response()->json(['message'=>'admin profile update','profile'=>$admin[0],'imageUrl'=>$admin[1]]);
+    }
+
+
     public function Login(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',

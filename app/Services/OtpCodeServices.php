@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Students;
 use App\Models\Teacher;
+use App\Models\Admin;
 use App\Repositories\StudentRepositoriesInterface;
 use App\Repositories\TeacherRepositoriesInterface;
 use App\Repositories\TokenRepositoriesInterface;
@@ -72,10 +73,19 @@ class OtpCodeServices{
                 }
                 $user=$teacher;
             }else{
-         $user = $this->teacher_repositories_interface->create($request);
+            $user = $this->teacher_repositories_interface->create($request);
                 $userStatus = 'user_new';
             }
-        }else{
+        }elseif($cachedOtp['user'] == 'admin'){
+            $admin=Admin::where('phoneNumber','=',$localPhone)->first();
+            if($admin){
+                $user=$admin;
+                $userStatus = 'Admin_Register';
+            }else{
+                return null;
+            }
+        }
+        else{
             return null;
         }
         $token = $user->createToken('authToken')->plainTextToken;

@@ -145,6 +145,10 @@ use Illuminate\Support\Facades\Hash;
         }
         return $admin;
     }
+    public function Admin_profile($admin_id){
+        $admin=Admin::findOrFail($admin_id);
+        return $admin;
+    }
     public function proccess_teacher_account($teacher, $request)
     {
         $admin_id=Auth::guard('admin')->user()->id;

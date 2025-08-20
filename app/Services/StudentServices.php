@@ -103,7 +103,7 @@ class StudentServices{
 
             $freePeriods = [];
             $cursor = $workStart->copy();
-            
+
             foreach ($reservations as $res) {
             // إذا كان هناك فراغ بين المؤشر وبداية الحجز
             if ($cursor->lt($res['start'])) {
@@ -143,7 +143,7 @@ class StudentServices{
                 'status'=> 'reserved',
             ];
         })->toArray();
-                //  دمج الحُجوزات مع الأوقات المتاحة
+                //  دمج الحجوزات مع الأوقات المتاحة
         $allSlots = array_merge($reservedSlots, $availableSlots);
 
         // ترتيب الأوقات حسب البداية

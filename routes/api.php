@@ -50,6 +50,8 @@ Route::post('Add_university_stage',[AdminController::class, 'Add_university_stag
 Route::post('Add_university_subject/{university_stage}',[AdminController::class, 'Add_university_subject']);
 Route::get('Teacher_accounts_for_approve',[AdminController::class, 'get_teacher_account_for_approve']);
 Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'proccess_teacher_account']);
+Route::get('get_profile',[AdminController::class,'Admin_profile']);
+Route::post('update_profile',[AdminController::class,'update_profile']);
 });
 
 Route::middleware('check_teacher')->group(function(){

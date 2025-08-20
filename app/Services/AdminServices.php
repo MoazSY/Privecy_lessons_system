@@ -7,6 +7,7 @@ use App\Models\Students;
 use App\Models\Teacher;
 use App\Repositories\AdminRepositoriesInterface;
 use App\Repositories\TokenRepositoriesInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminServices{
@@ -68,6 +69,44 @@ public function Regester($request){
             $refresh_token = $this->token_repositories_interface->Add_refresh_token($token);
             return ['admin'=>$admin,'token'=>$token,'refresh_token'=>$refresh_token,'imageUrl'=>$imageUrl];
     }
+    public function Admin_profile(){
+        $admin=Auth::guard('admin')->user();
+        $profile=$this->admin_repositories_interface->Admin_profile($admin->id);
+         $image=$profile->image;
+         if($image==null)
+            $imageUrl=null;
+         else
+         $imageUrl=asset('storage/'.$image);
+         return ['admin'=>$profile,'imageUrl'=>$imageUrl];
+    }
+
+        public function profile_update($request,$data){
+        $admin_id = Auth::guard('admin')->user()->id;
+        $admin = Admin::where('id', '=', $admin_id)->first();
+        if($request->hasFile('image')){
+            $originalName=$request->file('image')->getClientOriginalName();
+            $path=$request->file('image')->storeAs('admin/images',$originalName,'public');
+            $data['image']=$path;
+            $imageUrl = asset('storage/' . $path);
+        }else{
+            if($admin->image==null){
+                $imageUrl=null;
+            }
+            else{
+            $imageUrl = asset('storage/' .$admin->image);
+
+            }
+        }
+        if(!empty($data['password'])){
+            $data['password']=Hash::make($data['password']);
+        }
+        $admin->update($data);
+        $admin->fresh();
+        $admin->save();
+        return [$admin,$imageUrl];
+    }
+
+
 public function login($request){
         $credentials = $request->only('email', 'password');
         $userType=[
