@@ -166,4 +166,46 @@ public function login($request){
         $admin_id=Auth::guard('admin')->user()->id;
         return $this->admin_repositories_interface->charging_card($admin_id,$request);
     }
+    public function search_student($request){
+        $query=Students::query();
+        if($request->filled('phoneNumber')){
+            $query->where('phoneNumber','=',$request->input('phoneNumber'));
+        }
+    if ($request->filled('firstName')) {
+        $name = strtolower($request->input('firstName'));
+        $query->whereRaw('LOWER(firstName) LIKE ?', ["%{$name}%"]);
+    }
+        if ($request->filled('lastName')) {
+        $name = strtolower($request->input('lastName'));
+        $query->whereRaw('LOWER(lastName) LIKE ?', ["%{$name}%"]);
+    }
+    $result=$query->get()->map(function ($student){
+        return[
+        'student'=>$student,
+        'imageUrl'=> asset('storage/' . $student->image)
+        ];
+    });
+    return $result;
+    }
+        public function search_teacher($request){
+        $query=Teacher::query();
+        if($request->filled('phoneNumber')){
+            $query->where('phoneNumber','=',$request->input('phoneNumber'));
+        }
+    if ($request->filled('firstName')) {
+        $name = strtolower($request->input('firstName'));
+        $query->whereRaw('LOWER(firstName) LIKE ?', ["%{$name}%"]);
+    }
+        if ($request->filled('lastName')) {
+        $name = strtolower($request->input('lastName'));
+        $query->whereRaw('LOWER(lastName) LIKE ?', ["%{$name}%"]);
+    }
+    $result=$query->get()->map(function ($student){
+        return[
+        'student'=>$student,
+        'imageUrl'=> asset('storage/' . $student->image)
+        ];
+    });
+    return $result;
+    }
 }

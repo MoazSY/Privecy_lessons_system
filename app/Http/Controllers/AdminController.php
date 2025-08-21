@@ -165,4 +165,22 @@ class AdminController extends Controller
         $charging=$this->admin_services->card_charging($request);
         return response()->json(['message'=>'student card is charging successfully','charging_card'=>$charging]);
     }
+    public function search_student(Request $request){
+        $validate=Validator::make($request->all(),[
+            'phoneNumber'=>'sometimes|integer',
+            'firstName'=>'sometimes|string',
+            'lastName'=>'sometimes|string'
+        ]);
+        $student=$this->admin_services->search_student($request);
+        return response()->json(['message'=>'result search to students','students'=>$student]);
+    }
+    public function search_teacher(Request $request){
+            $validate=Validator::make($request->all(),[
+            'phoneNumber'=>'sometimes|integer',
+            'firstName'=>'sometimes|string',
+            'lastName'=>'sometimes|string'
+        ]);
+        $teacher=$this->admin_services->search_teacher($request);
+        return response()->json(['message'=>'result search to teacher','students'=>$teacher]);
+    }
 }

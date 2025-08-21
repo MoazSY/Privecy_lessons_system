@@ -53,6 +53,9 @@ Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'procc
 Route::get('get_profile',[AdminController::class,'Admin_profile']);
 Route::post('update_profile',[AdminController::class,'update_profile']);
 Route::post('student_card_charging',[AdminController::class,'student_card_charging']);
+Route::post('search_student',[AdminController::class,'search_student']);
+Route::post('search_teacher',[AdminController::class,'search_teacher']);
+
 });
 
 Route::middleware('check_teacher')->group(function(){
