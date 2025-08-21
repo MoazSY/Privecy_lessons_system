@@ -38,7 +38,7 @@ class TeacherController extends Controller
         $data=$validate->validated();
         $teacher=$this->teacher_services->Register($request,$data);
         return response()->json(['message'=>'teacher complete account and wait to approvement','teacher'=>$teacher[0],'imageUrl'=>$teacher[1],
-        'Certificate_File_Url'=>$teacher[2]]);
+        'Certificate_File_Url'=>$teacher[2],'identification_image'=>$teacher[3]]);
 }
     public function teacher_profile(){
         $profile=$this->teacher_services->teacher_profile();
@@ -72,7 +72,7 @@ public function update_profile(Request $request){
          $data=$validate->validated();
         $teacher=$this->teacher_services->Register($request,$data);
         return response()->json(['message'=>'teacher complete account and wait to approvement','teacher'=>$teacher[0],'imageUrl'=>$teacher[1],
-        'Certificate_File_Url'=>$teacher[2]]);
+        'Certificate_File_Url'=>$teacher[2],'identification_image'=>$teacher[3]]);
 }
     public function teacher_available_worktime(Request $request){
         $validate=Validator::make($request->all(),[

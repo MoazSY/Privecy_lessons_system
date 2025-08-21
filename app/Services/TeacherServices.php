@@ -17,6 +17,22 @@ protected $teacher_repositories_interface;
     public function Register($request,$data){
         $teacher_id=Auth::guard('teacher')->user()->id;
         $teacher=Teacher::where('id','=',$teacher_id)->first();
+        if($request->hasFile('identification_image')){
+
+        $identification_image=$request->file('identification_image')->getClientOriginalName();
+        $path_identification_image=$request->file('identification_image')->storeAs('teacher/images/id',$identification_image,'public');
+        $data['identification_image']= $path_identification_image;
+        $ImageIdURl=asset('storage/'.$path_identification_image);
+        $teacher->Activate_Account=false;
+        $teacher->save();
+        }
+        else{
+            if($teacher->identification_image==null){
+              $ImageIdURl=null;
+            }
+            $ImageIdURl=asset('storage/'.$teacher->identification_image);
+        }
+
         if($request->hasFile('url_certificate_file')){
         $experienceFile=$request->file('url_certificate_file')->getClientOriginalName();
         $path_experienceFile=$request->file('url_certificate_file')->storeAs('teacher/Files',$experienceFile,'public');
@@ -48,7 +64,7 @@ protected $teacher_repositories_interface;
         }
         $teacher->update($data);
         $teacher->fresh();
-        return [$teacher,$imageUrl,$fileUrl];
+        return [$teacher,$imageUrl,$fileUrl,$ImageIdURl];
     }
 
     public function teacher_profile(){
