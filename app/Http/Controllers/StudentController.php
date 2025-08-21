@@ -115,8 +115,18 @@ class StudentController extends Controller
         $result=$this->teacher_services->following($request,$teacher);
         return response()->json(['message'=>'student has followed teacher','following'=>$result]);
     }
-    public function lesson_reservation(){
-
+    public function lesson_reservation(Request $request){
+        $validate=Validator::make($request->all(),[
+            'teacher_id'=>'required|integer|exists:teacher,id',
+            'subject_type'=>'required|in:school,university',
+            'subject_id'=>'required|integer|exists:school_subjects,id',
+            'reservation_time' => 'required|date_format:Y-m-d H:i',
+            'reservation_day'=>'required|string',
+        ]);
+            if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $reservation=$this->student_services->reservation();
     }
     public function getWeeklyAvailableSlots_reservations(Request $request){
         $validator=Validator::make($request->all(),[

@@ -157,6 +157,11 @@ class StudentServices{
         return $result;
 
     }
-
+    public function reservation($request){
+        $student_id=Auth::guard('student')->user()->id;
+        if($request->subject_type=='school'){
+            // $subject_school=School_
+        }
+    }
 
 }

@@ -41,6 +41,7 @@ Route::middleware('check_students')->group(function(){
     Route::post('teacher_Rating/{teacher}',[StudentController::class,'Rating_teacher']);
     Route::post('teacher_following/{teacher}',[StudentController::class,'Following_teacher']);
     Route::post('getWeeklyAvailableSlots_reservations',[StudentController::class,'getWeeklyAvailableSlots_reservations']);
+    Route::post('search_teacher',[AdminController::class,'search_teacher']);
 
 });
 Route::middleware('check_admin')->group(function(){
@@ -63,5 +64,7 @@ Route::middleware('check_teacher')->group(function(){
     Route::get('teacher_profile',[TeacherController::class,'teacher_profile']);
     Route::post('update_teacher_profile',[TeacherController::class,'update_profile']);
     Route::post('add_worktime',[TeacherController::class, 'teacher_available_worktime'])->middleware('check_teacher_activate');
+    Route::post('search_student',[AdminController::class,'search_student']);
+
 });
 
