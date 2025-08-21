@@ -126,7 +126,7 @@ class StudentController extends Controller
             if($validate->fails()){
             return response()->json(['message'=>$validate->errors()]);
         }
-        $reservation=$this->student_services->reservation();
+        $reservation=$this->student_services->reservation($request);
     }
     public function getWeeklyAvailableSlots_reservations(Request $request){
         $validator=Validator::make($request->all(),[

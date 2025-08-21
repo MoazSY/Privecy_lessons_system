@@ -159,9 +159,20 @@ class StudentServices{
     }
     public function reservation($request){
         $student_id=Auth::guard('student')->user()->id;
+        $teacher=Teacher::findOrFail($request->teacher_id);
         if($request->subject_type=='school'){
-            // $subject_school=School_
+            $subject=School_subjects::findOrFail($request->subject_id);
+            $teacher_subject = $teacher->School_subjects()->wherePivot('school_subject_id', $subject->id)->first();
+            $lessonDuration = $teacher_subject->pivot->lesson_duration;
+            $lessonPrice    = $teacher_subject->pivot->lesson_price;
+        }else{
+            $subject=University_subjects::findOrFail($request->subject_id);
+            $teacher_subject = $teacher->University_subjects()->wherePivot('university_subjects_id', $subject->id)->first();
+            $lessonDuration = $teacher_subject->pivot->lesson_duration;
+            $lessonPrice    = $teacher_subject->pivot->lesson_price;
         }
+        return $this->student_repositories_interface->reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice);
+
     }
 
 }

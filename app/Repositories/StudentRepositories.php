@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Payment_transaction;
 use App\Models\RefreshToken;
 use App\Models\School_stage;
 use App\Models\School_subjects;
@@ -205,6 +206,22 @@ $result=$student->Univesity_subjects()->sync($subjects);
 $attached=University_subjects::whereIn('id',$result['attached'])->get();
 return $attached;
 }
+
+public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice)
+{
+DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice){
+    // $payment=Payment_transaction::create([
+    //     // 'teacher_id'=>$request->
+    // ]);
+});
+}
+
+
+
+
+
+
+
 public function ShowTeacherAvailable($student)
 {
 
@@ -221,10 +238,7 @@ public function ShowTeacherProfile($teacher)
 {
 
 }
-public function SubjectReservation($student, $teacher, $subject, $request)
-{
 
-}
 public function GetAvailableTimeTeacher($teacher)
 {
 

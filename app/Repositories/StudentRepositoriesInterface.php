@@ -18,7 +18,7 @@ public function ShowTeacherAvailable($student);
 public function TeacherRating($student,$teacher);
 public function TeacherFollowing($student,$teacher,$RecieveNotification);
 public function ShowTeacherProfile($teacher);
-public function SubjectReservation($student,$teacher,$subject,$request);
+public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice);
 public function GetAvailableTimeTeacher($teacher);
 public function GetStages_Subjecs_Teacher($teacher);
 public function GetReservation($student);
