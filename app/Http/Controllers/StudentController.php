@@ -84,7 +84,7 @@ class StudentController extends Controller
             return response()->json(['message'=>$validate->errors()]);
         }
         $teachers=$this->teacher_services->teacher_filter($request);
-        return response()->json(['message'=>'all filter teachers','teacher'=>$teachers]);
+        return response()->json(['message'=>'all filter teachers','teachers'=>$teachers]);
     }
 
     public function get_teacher(){
@@ -127,6 +127,10 @@ class StudentController extends Controller
             return response()->json(['message'=>$validate->errors()]);
         }
         $reservation=$this->student_services->reservation($request);
+        if($reservation=="null"){
+            return response()->json(['message'=>'you should check your card not enought money ']);
+        }
+        return response()->json(['message'=>'the reservation of lesson is done successfully','reservation'=>$reservation]);
     }
     public function getWeeklyAvailableSlots_reservations(Request $request){
         $validator=Validator::make($request->all(),[

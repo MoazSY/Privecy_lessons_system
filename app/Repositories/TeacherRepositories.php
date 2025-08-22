@@ -101,7 +101,7 @@ public function SendAccountForAprrove($request){
         if($account->School_subjects()->exists()|| $account->University_subjects()->exists()){
             $teacher_School_Subjects=$account->School_subjects;
             $teacher_University_Subjects=$account->University_subjects;
-            $array[]=["account"=>$account];
+            $array[]=$account;
         }
     }
     return $array;
@@ -182,6 +182,6 @@ public function SendAccountForAprrove($request){
     return $attachedTeacher;
    }
    public function get_Available_reservations($teacher,$subject){
-    
+
    }
  }

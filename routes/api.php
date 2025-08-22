@@ -35,13 +35,14 @@ Route::middleware('check_students')->group(function(){
 
     Route::post('Profile_complete',[StudentController::class, 'Profile_complete']);
     Route::get('Student_profile',[StudentController::class, 'Student_profile']);
-    Route::post('update_profile',[StudentController::class,'update_profile']);
+    Route::post('update_profiles',[StudentController::class,'update_profile']);
     Route::get('get_teacher',[StudentController::class,'get_teacher']);
     Route::post('teacher_filter',[StudentController::class,'filter_result']);
     Route::post('teacher_Rating/{teacher}',[StudentController::class,'Rating_teacher']);
     Route::post('teacher_following/{teacher}',[StudentController::class,'Following_teacher']);
     Route::post('getWeeklyAvailableSlots_reservations',[StudentController::class,'getWeeklyAvailableSlots_reservations']);
     Route::post('search_teacher',[AdminController::class,'search_teacher']);
+    Route::post('lesson_reservation',[StudentController::class,'lesson_reservation']);
 
 });
 Route::middleware('check_admin')->group(function(){
@@ -49,8 +50,8 @@ Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);
 Route::post('Add_school_subject/{school_stage}',[AdminController::class, 'Add_school_subject']);
 Route::post('Add_university_stage',[AdminController::class, 'Add_university_stage']);
 Route::post('Add_university_subject/{university_stage}',[AdminController::class, 'Add_university_subject']);
-Route::get('Teacher_accounts_for_approve',[AdminController::class, 'get_teacher_account_for_approve']);
-Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'proccess_teacher_account']);
+Route::get('Teacher_accounts_for_approve',[AdminController::class, 'get_teacher_account_for_approve'])->middleware('check_SuperAdmin');
+Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'proccess_teacher_account'])->middleware('check_SuperAdmin');
 Route::get('get_profile',[AdminController::class,'Admin_profile']);
 Route::post('update_profile',[AdminController::class,'update_profile']);
 Route::post('student_card_charging',[AdminController::class,'student_card_charging']);

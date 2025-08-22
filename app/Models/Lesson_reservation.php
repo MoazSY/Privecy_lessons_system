@@ -18,14 +18,21 @@ class Lesson_reservation extends Model
     'duration',
     'reservation_day',
     'state_reservation',
-    'subjectable'
+    // 'subjectable'
+    'subjectable_id',
+    'subjectable_type'
     ];
-    public function subject_table(){
+    public function subjectable(){
         return $this->morphTo();
     }
     public function payments()
 {
     return $this->morphMany(Payment_transaction::class, 'S_or_G_lesson');
 }
-
+        public function teacher(){
+        return $this->belongsTo(Teacher::class);
+    }
+    public function student(){
+        return $this->belongsTo(Students::class);
+    }
 }

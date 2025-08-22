@@ -29,7 +29,8 @@ class AdminController extends Controller
             'image'=> 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'birthdate'=>'required|date',
             'gender'=>'required|string',
-            'bankAccount'=>'required|string'
+            'bankAccount'=>'required|string',
+            'SuperAdmin'=>'sometimes|boolean'
         ]);
         if($validate->fails()){
             return response()->json(['message'=>$validate->errors()]);

@@ -1,6 +1,8 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Admin;
+use App\Models\Lesson_reservation;
 use App\Models\Payment_transaction;
 use App\Models\RefreshToken;
 use App\Models\School_stage;
@@ -9,6 +11,8 @@ use App\Models\Student_subject;
 use App\Models\Students;
 use App\Models\University_stage;
 use App\Models\University_subjects;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Str;
@@ -209,14 +213,68 @@ return $attached;
 
 public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice)
 {
+    $student=Students::findOrFail($student_id);
 DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice){
-    // $payment=Payment_transaction::create([
-    //     // 'teacher_id'=>$request->
-    // ]);
+   $admin= $this->getRandomAdmin();
+
+    $duration = Carbon::createFromFormat('H:i:s', $lessonDuration);
+    $lesson_duration = $duration->hour * 60 + $duration->minute;
+
+    $payment=Payment_transaction::create([
+        'teacher_id'=>$request->teacher_id,
+        'student_id'=>$student_id,
+        'amount'=>$lessonPrice,
+        'admin_payout_teacher'=>false,
+        'Admin_Id'=>$admin->id,
+        'commission_value'=>0.15*$lessonPrice,
+        'payment_transaction_time'=>Carbon::now()
+
+    ]);
+
+    $reservation=$subject->reservations()->create([
+        'teacher_id'=>$request->teacher_id,
+        'student_id'=>$student_id,
+        'reservation_time'=>$request->reservation_time,
+        'reservation_day'=>$request->reservation_day,
+        'state_reservation'=>"Watting_approve",
+        'duration'=> $lesson_duration
+    ]);
+
+
+    $payment->S_or_G_lesson()->associate($reservation);
+    $payment->save();
+    $student=Students::findOrFail($student_id);
+    $student->CardValue-=$lessonPrice;
+    $student->save();
+
+
 });
+   $lastReservation = $student->Reservations()->orderBy('id', 'desc')->first();
+return $lastReservation;
+
 }
+public function getRandomAdmin()
+{
 
+    $admins = Admin::where('SuperAdmin','=',false)->get();
+    $count = $admins->count();
 
+    if ($count === 0) {
+        return null;
+    }
+
+    $currentIndex = Cache::get('round_robin_index', 0);
+
+    $admin = $admins[$currentIndex];
+
+    Cache::put(
+        'round_robin_index',
+        ($currentIndex + 1) % $count,
+        now()->addDay()
+    );
+
+    return $admin;
+}
 
 
 

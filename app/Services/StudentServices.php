@@ -159,6 +159,7 @@ class StudentServices{
     }
     public function reservation($request){
         $student_id=Auth::guard('student')->user()->id;
+        $student=Students::findOrFail($student_id);
         $teacher=Teacher::findOrFail($request->teacher_id);
         if($request->subject_type=='school'){
             $subject=School_subjects::findOrFail($request->subject_id);
@@ -171,7 +172,13 @@ class StudentServices{
             $lessonDuration = $teacher_subject->pivot->lesson_duration;
             $lessonPrice    = $teacher_subject->pivot->lesson_price;
         }
+
+        if($lessonPrice <= $student->CardValue){
         return $this->student_repositories_interface->reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice);
+        }
+        else{
+            return "null";
+        }
 
     }
 

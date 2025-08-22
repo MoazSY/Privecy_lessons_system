@@ -120,6 +120,12 @@ use Illuminate\Support\Facades\Hash;
         return $university_subjects;
     }
     public function create($request,$imagepath){
+        if($request->filled('SuperAdmin')){
+            $superAdmin=$request->input('SuperAdmin');
+        }
+        else{
+            $superAdmin=false;
+        }
         if($imagepath!=null){
             $admin=Admin::create([
                 'firstName'=>$request->firstName,
@@ -130,7 +136,8 @@ use Illuminate\Support\Facades\Hash;
                 'image'=>$imagepath,
                 'birthdate'=>$request->birthdate,
                 'gender'=>$request->gender,
-                'bankAccount'=>$request->bankAccount
+                'bankAccount'=>$request->bankAccount,
+                'SuperAdmin'=>$superAdmin
             ]);
         }
         else{
@@ -142,7 +149,8 @@ use Illuminate\Support\Facades\Hash;
                 'password' => Hash::make($request->password),
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
-                'bankAccount' => $request->bankAccount
+                'bankAccount' => $request->bankAccount,
+                'SuperAdmin'=>$superAdmin
             ]);
         }
         return $admin;
@@ -183,7 +191,9 @@ use Illuminate\Support\Facades\Hash;
         $chargingCards=Student_card_charging::where('admin_id','=',$admin_id)->orderBy('charging_time','desc')->first();
         $student=Students::findOrFail($request->student_id);
         $student->CardValue+=$request->card_charging;
+        $admin->CardValue+=$request->card_charging;
         $student->save();
+        $admin->save();
         return $chargingCards;
     }
 

@@ -61,7 +61,7 @@ class Students extends Authenticatable
         return $this->belongsToMany(Teacher::class,'teacher_following','student_id','teacher_id')->withPivot('following_state','recieve_notifications')->withTimestamps();
     }
      public function Reservations(){
-        return $this->hasMany(Lesson_reservation::class);
+        return $this->hasMany(Lesson_reservation::class,'student_id');
     }
     public function card_charging(){
         return $this->hasMany(Student_card_charging::class);

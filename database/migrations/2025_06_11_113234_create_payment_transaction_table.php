@@ -18,11 +18,14 @@ return new class extends Migration
             $table->foreignId("student_id")->references("id")->on("students")->onDelete("cascade");
             $table->nullableMorphs("S_or_G_lesson");
             $table->float("amount");
-            $table->enum("currency",["sy","$"]);
+            $table->float('commission')->default(0.15);
+            $table->float('commission_value')->nullable();
+            $table->enum("currency",["sy","$"])->default("sy");
             // $table->string("payment_method");//E_click
             // $table->enum("getway_response",["fail","success"]);
             // $table->dateTime("payment_transaction_time");
-            $table->text("descreption")->nullable();    
+            // $table->text("descreption")->nullable();
+            $table->integer('Admin_Id');
             $table->boolean("admin_payout_teacher");
             // $table->string("payout_transaction_ref")->nullable();
             // $table->dateTime("payout_transaction_time")->nullable();

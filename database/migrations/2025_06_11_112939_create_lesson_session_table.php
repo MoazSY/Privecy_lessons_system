@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // يجب اضافة ال  lesson_reservation ,date time
         Schema::create('lesson_session', function (Blueprint $table) {
             $table->id();
             $table->foreignId("teacher_id")->references("id")->on("teacher")->onDelete("cascade");
