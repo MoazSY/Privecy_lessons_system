@@ -182,6 +182,6 @@ class AdminController extends Controller
             'lastName'=>'sometimes|string'
         ]);
         $teacher=$this->admin_services->search_teacher($request);
-        return response()->json(['message'=>'result search to teacher','students'=>$teacher]);
+        return response()->json(['message'=>'result search to teacher','teachers'=>$teacher]);
     }
 }

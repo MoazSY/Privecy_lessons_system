@@ -188,7 +188,12 @@ public function login($request){
     return $result;
     }
         public function search_teacher($request){
-        $query=Teacher::query();
+        // $query=Teacher::query();
+                $query = Teacher::withAvg('Rating', 'rate')->
+        withCount(['folowing_value' => fn($q) => $q->where('following_state', true)])
+        ->with(['School_subjects', 'University_subjects', 'available_worktime'])
+        ->where('Activate_Account', true);
+        
         if($request->filled('phoneNumber')){
             $query->where('phoneNumber','=',$request->input('phoneNumber'));
         }
