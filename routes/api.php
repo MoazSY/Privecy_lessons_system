@@ -37,6 +37,7 @@ Route::middleware('check_students')->group(function(){
     Route::get('Student_profile',[StudentController::class, 'Student_profile']);
     Route::post('update_profiles',[StudentController::class,'update_profile']);
     Route::get('get_teacher',[StudentController::class,'get_teacher']);
+    Route::get('teacherProfile/{teacher}',[StudentController::class,'teacher_profile']);
     Route::post('teacher_filter',[StudentController::class,'filter_result']);
     Route::post('teacher_Rating/{teacher}',[StudentController::class,'Rating_teacher']);
     Route::post('teacher_following/{teacher}',[StudentController::class,'Following_teacher']);

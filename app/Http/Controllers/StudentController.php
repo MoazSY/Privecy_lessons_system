@@ -94,6 +94,11 @@ class StudentController extends Controller
     }
     return response()->json(['message'=>'teachers for you','teachers'=>$results]);
     }
+    public function teacher_profile(Teacher $teacher){
+    $profile=$this->teacher_services->teacherprofile($teacher);
+    return response()->json(['message'=>'teacher profile','profile'=>$profile]);
+
+    }
     public function Rating_teacher(Request $request,Teacher $teacher){
         $validate=Validator::make($request->all(),[
             "rate"=>'required|integer|min:1|max:5'

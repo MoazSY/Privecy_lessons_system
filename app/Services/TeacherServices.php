@@ -72,6 +72,11 @@ protected $teacher_repositories_interface;
         $profile=$this->teacher_repositories_interface->teacher_profile($teacher);
         return $profile;
     }
+        public function teacherprofile($teacherid){
+            $teacher=Teacher::findOrFail($teacherid->id);
+        $profile=$this->teacher_repositories_interface->teacher_profile($teacher);
+        return $profile;
+         }
 
     public function UnActivate_account(){
     return $this->teacher_repositories_interface->UnActivate_account();
