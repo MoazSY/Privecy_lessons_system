@@ -44,6 +44,7 @@ Route::middleware('check_students')->group(function(){
     Route::post('getWeeklyAvailableSlots_reservations',[StudentController::class,'getWeeklyAvailableSlots_reservations']);
     Route::post('student_search_teacher',[AdminController::class,'search_teacher']);
     Route::post('lesson_reservation',[StudentController::class,'lesson_reservation']);
+    Route::get('get_all_reservation',[StudentController::class,'get_all_reservation']);
 
 });
 Route::middleware('check_admin')->group(function(){

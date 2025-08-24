@@ -26,4 +26,7 @@ class School_subjects extends Model
     public function reservations(){
         return $this->morphMany(Lesson_reservation::class,'subjectable');
     }
+    public function lesson_session(){
+    return $this->morphMany(Lesson_session::class,'subjectable');
+    }
 }

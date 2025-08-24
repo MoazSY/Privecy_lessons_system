@@ -25,9 +25,13 @@ class Lesson_reservation extends Model
     public function subjectable(){
         return $this->morphTo();
     }
+
     public function payments()
 {
     return $this->morphMany(Payment_transaction::class, 'S_or_G_lesson');
+}
+public function lesson_session(){
+    return $this->morphMany(Lesson_session::class,'S_or_G_lesson');
 }
         public function teacher(){
         return $this->belongsTo(Teacher::class);

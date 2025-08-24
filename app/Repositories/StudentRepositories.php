@@ -275,7 +275,36 @@ public function getRandomAdmin()
 
     return $admin;
 }
+public function get_all_reservations($student_id){
+$student=Students::findOrFail($student_id);
+$reservations = $student->reservations()
+    ->whereIn('state_reservation', ['Watting_approve', 'accepted'])
+    ->whereDoesntHave('lesson_session')
+    ->with(['teacher', 'subjectable'])
+    ->orderBy('reservation_day', 'asc')
+    ->orderBy('reservation_time', 'asc')->get()
+->map(function ($reservation) {
+    $currentDateTime = Carbon::now();
 
+    $reservationDateTime = Carbon::parse($reservation->reservation_time);
+
+    $timeDifference = $currentDateTime->diff($reservationDateTime);
+
+    $reservation->time_remaining = [
+        'days' => $timeDifference->d,
+        'hours' => $timeDifference->h,
+        'minutes' => $timeDifference->i,
+        'total_hours' => $timeDifference->h + ($timeDifference->d * 24)
+    ];
+
+    $reservation->is_past = $currentDateTime->greaterThan($reservationDateTime);
+    $reservation->is_upcoming = !$reservation->is_past;
+    $reservation->human_readable = $timeDifference->format('%d day, %h hour, %i minute');
+
+    return $reservation;
+});
+return $reservations;
+}
 
 
 

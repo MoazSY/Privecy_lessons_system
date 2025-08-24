@@ -61,6 +61,9 @@ class Teacher extends Authenticatable
     public function Reservations(){
         return $this->hasMany(Lesson_reservation::class);
     }
+    public function lesson_session(){
+    return $this->hasMany(Lesson_session::class,'student_id');
+    }
 
 }
 

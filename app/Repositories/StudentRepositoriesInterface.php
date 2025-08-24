@@ -26,5 +26,6 @@ public function GetLessonse($student);
 public function ShowSlider();
 public function Report($student,$lesson);
 public function Payment($student,$teacher,$request);
+public function get_all_reservations($student_id);
 
 }

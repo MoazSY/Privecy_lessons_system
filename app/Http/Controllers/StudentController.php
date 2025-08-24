@@ -137,6 +137,10 @@ class StudentController extends Controller
         }
         return response()->json(['message'=>'the reservation of lesson is done successfully','reservation'=>$reservation]);
     }
+    public function get_all_reservation(){
+        $reservation=$this->student_services->all_reservation();
+        return response()->json(['message'=>'all reservation related to student','reservation'=>$reservation]);
+    }
     public function getWeeklyAvailableSlots_reservations(Request $request){
         $validator=Validator::make($request->all(),[
         'teacher_id'=>'required|integer',

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+use PgSql\Lob;
 
 class Students extends Authenticatable
 {
@@ -62,6 +62,9 @@ class Students extends Authenticatable
     }
      public function Reservations(){
         return $this->hasMany(Lesson_reservation::class,'student_id');
+    }
+    public function lesson_session(){
+    return $this->hasMany(Lesson_session::class,'student_id');
     }
     public function card_charging(){
         return $this->hasMany(Student_card_charging::class);

@@ -182,5 +182,9 @@ class StudentServices{
         }
 
     }
+    public function all_reservation(){
+        $student_id=Auth::guard('student')->user()->id;
+        return $this->student_repositories_interface->get_all_reservations($student_id);
+    }
 
 }
