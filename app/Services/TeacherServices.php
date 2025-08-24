@@ -191,4 +191,8 @@ protected $teacher_repositories_interface;
         $student=Auth::guard('student')->user()->id;
         return $this->teacher_repositories_interface->following($request,$student,$teacher);
     }
+    public function all_reservation(){
+        $teacher_id=Auth::guard('teacher')->user()->id;
+        return $this->teacher_repositories_interface->get_all_reservations($teacher_id);
+    }
 }

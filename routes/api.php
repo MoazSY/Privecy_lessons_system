@@ -68,6 +68,7 @@ Route::middleware('check_teacher')->group(function(){
     Route::post('update_teacher_profile',[TeacherController::class,'update_profile']);
     Route::post('add_worktime',[TeacherController::class, 'teacher_available_worktime'])->middleware('check_teacher_activate');
     Route::post('search_student',[AdminController::class,'search_student']);
+    Route::get('getAllReservation',[TeacherController::class,'get_all_reservation'])->middleware('check_teacher_activate');
 
 });
 

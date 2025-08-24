@@ -9,6 +9,7 @@ use App\Models\Teacher_school_subjects;
 use App\Models\Teacher_university_stage;
 use App\Models\University_stage;
 use App\Models\University_subjects;
+use Illuminate\Support\Carbon;
 
  class TeacherRepositories implements TeacherRepositoriesInterface{
 public function create($request)
@@ -181,7 +182,40 @@ public function SendAccountForAprrove($request){
     $attachedTeacher=Teacher::whereIn('id',$affectedIds)->get();
     return $attachedTeacher;
    }
+
+   public function get_all_reservations($teacher_id){
+    $teacher=Teacher::findOrFail($teacher_id);
+    $reservations = $teacher->reservations()
+    ->whereIn('state_reservation', ['Watting_approve', 'accepted'])
+    ->whereDoesntHave('lesson_session')
+    ->with(['student', 'subjectable'])
+    ->orderBy('reservation_day', 'asc')
+    ->orderBy('reservation_time', 'asc')->get()
+    ->map(function ($reservation) {
+    $currentDateTime = Carbon::now();
+
+    $reservationDateTime = Carbon::parse($reservation->reservation_time);
+
+    $timeDifference = $currentDateTime->diff($reservationDateTime);
+
+    $reservation->time_remaining = [
+        'days' => $timeDifference->d,
+        'hours' => $timeDifference->h,
+        'minutes' => $timeDifference->i,
+        'total_hours' => $timeDifference->h + ($timeDifference->d * 24)
+    ];
+
+    $reservation->is_past = $currentDateTime->greaterThan($reservationDateTime);
+    $reservation->is_upcoming = !$reservation->is_past;
+    $reservation->human_readable = $timeDifference->format('%d day, %h hour, %i minute');
+
+    return $reservation;
+    });
+    return $reservations;
+
+   }
    public function get_Available_reservations($teacher,$subject){
 
    }
+
  }

@@ -14,4 +14,5 @@ namespace App\Repositories;
     public function Rating($request,$student,$teacher);
     public function following($request,$student,$teacher);
     public function get_Available_reservations($teacher,$subject);
+    public function get_all_reservations($teacher_id);
  }

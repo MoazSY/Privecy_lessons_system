@@ -88,6 +88,11 @@ public function update_profile(Request $request){
         $workTime=$this->teacher_services->add_worktime($request);
         return response()->json(['message'=>'teacher adding work time successfully','WorkTime'=>$workTime]);
     }
+    public function get_all_reservation(){
+    $reservation=$this->teacher_services->all_reservation();
+    return response()->json(['message'=>'all reservation related to teacher','reservation'=>$reservation]);
+
+    }
 
 
 }
