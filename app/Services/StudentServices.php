@@ -84,7 +84,12 @@ class StudentServices{
             $dayName = $worktime->workingDay;
             $workStart = Carbon::createFromFormat('H:i:s', $worktime->start_time);
             $workEnd   = Carbon::createFromFormat('H:i:s', $worktime->end_time);
-            $dayDate   = $startOfWeek->copy()->next($dayName)->format('Y-m-d');
+            // $dayDate   = $startOfWeek->copy()->next($dayName)->format('Y-m-d');
+            if ($startOfWeek->is($dayName)) {
+            $dayDate = $startOfWeek->format('Y-m-d'); // اليوم الحالي
+            } else {
+            $dayDate = $startOfWeek->copy()->next($dayName)->format('Y-m-d'); // الأسبوع القادم
+            }
             $break_lessons=$worktime->break_duration_lessons;//
             $duration_break=Carbon::createFromFormat('H:i:s',$break_lessons);
             $break_lessons=$duration_break->hour * 60 + $duration_break->minute;
@@ -136,6 +141,18 @@ class StudentServices{
                 $slotStart = $slotEnd->copy()->addMinutes($break_lessons);
             }
         }
+
+
+            if ($startOfWeek->is($dayName)) {
+            $currentTime = $startOfWeek->format('H:i');
+
+            $availableSlots = array_filter($availableSlots, function ($slot) use ($currentTime) {
+            return $slot['start'] >= $currentTime;
+            });
+
+            $availableSlots = array_values($availableSlots);
+            }
+
         $reservedSlots = $reservations->map(function ($res) use ($dayDate) {
             return [
                 'start' => $res['start']->format('H:i'),
