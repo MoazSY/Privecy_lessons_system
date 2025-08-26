@@ -278,7 +278,7 @@ public function getRandomAdmin()
 public function get_all_reservations($student_id){
 $student=Students::findOrFail($student_id);
 $reservations = $student->reservations()
-    ->whereIn('state_reservation', ['Watting_approve', 'accepted'])
+    ->whereIn('state_reservation', ['Watting_approve', 'accepted','rejectd'])
     ->whereDoesntHave('lesson_session')
     ->with(['teacher', 'subjectable'])
     ->orderBy('reservation_day', 'asc')

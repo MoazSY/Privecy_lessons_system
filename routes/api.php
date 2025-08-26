@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\JitsiSessionController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\StagesSubjectsController;
 use App\Http\Controllers\StudentController;
@@ -72,3 +73,27 @@ Route::middleware('check_teacher')->group(function(){
 
 });
 
+
+// // routes/api.php
+// Route::prefix('jitsi-sessions')->group(function () {
+//     Route::post('/auto-create/{reservationId}', [JitsiSessionController::class, 'autoCreateSession']);
+//     Route::get('/teacher/join/{sessionId}', [JitsiSessionController::class, 'joinAsTeacher']);
+//     Route::get('/student/join/{sessionId}', [JitsiSessionController::class, 'joinAsStudent']);
+//     Route::get('/rejoin/{sessionId}/{userType}', [JitsiSessionController::class, 'rejoinSession']);
+//     Route::get('/{sessionId}', [JitsiSessionController::class, 'getSessionInfo']);
+//     Route::post('/end/{sessionId}', [JitsiSessionController::class, 'endSession']);
+// });
+
+
+
+
+use App\Http\Controllers\ZoomSessionController;
+
+Route::prefix('zoom')->group(function () {
+    Route::post('/sessions/{reservationId}/auto-create', [ZoomSessionController::class, 'autoCreateSession']);
+    Route::post('/sessions/{sessionId}/join/teacher',    [ZoomSessionController::class, 'joinAsTeacher']);
+    Route::post('/sessions/{sessionId}/join/student',    [ZoomSessionController::class, 'joinAsStudent']);
+    Route::post('/sessions/{sessionId}/end',             [ZoomSessionController::class, 'endSession']);
+    Route::post('/sessions/{sessionId}/leave',           [ZoomSessionController::class, 'leave']);
+    Route::get('/sessions/{sessionId}',                  [ZoomSessionController::class, 'getSessionInfo']);
+});

@@ -35,4 +35,29 @@ return [
         ],
     ],
 
+    'jitsi' => [
+    'base_url' => env('JITSI_BASE_URL', 'https://meet.jit.si'),
+    'enable_recording' => env('JITSI_ENABLE_RECORDING', false),
+    'recording_storage' => env('JITSI_RECORDING_STORAGE', 'local'),
+    'auto_create_minutes' => env('SESSION_AUTO_CREATE_MINUTES', 15),
+],
+
+
+
+'daily' => [
+    'api_key'   => env('DAILY_API_KEY'),
+    'base_url'  => env('DAILY_BASE_URL', 'https://api.daily.co/v1'),
+    'subdomain' => env('DAILY_SUBDOMAIN'),
+    'domain_url'=> env('DAILY_DOMAIN_URL'), // https://<subdomain>.daily.co
+],
+
+'zoom' => [
+    'account_id' => env('ZOOM_ACCOUNT_ID'),
+    'client_id' => env('ZOOM_CLIENT_ID'),
+    'client_secret' => env('ZOOM_CLIENT_SECRET'),
+    'user_id' => env('ZOOM_USER_ID', 'me'),
+    'base_url' => 'https://api.zoom.us/v2',
+    // هام: لا يوجد تسجيل سحابي بالخطة المجانية
+],
+
 ];

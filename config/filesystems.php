@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'jitsi_recordings' => [ // ← يمكنك إضافة disk مخصص
+        'driver' => 'local',
+        'root' => storage_path('app/recordings'),
+        'url' => env('APP_URL').'/recordings',
+        'visibility' => 'public',
+    ],
+
     ],
 
     /*
