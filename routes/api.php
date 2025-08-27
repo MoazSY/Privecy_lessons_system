@@ -49,6 +49,7 @@ Route::middleware('check_students')->group(function(){
     Route::get('get_all_reservation',[StudentController::class,'get_all_reservation']);
     Route::get('all_student_session',[ZoomSessionController::class,'get_session']);
     Route::post('uplode_recording_session/{session}',[StudentController::class,'add_session_video']);
+    Route::post('cancle_reservation/{reservation}',[StudentController::class,'cancle_reservation']);
 });
 Route::middleware('check_admin')->group(function(){
 Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);

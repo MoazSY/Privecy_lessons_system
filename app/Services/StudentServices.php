@@ -142,7 +142,6 @@ class StudentServices{
             }
         }
 
-
             if ($startOfWeek->is($dayName)) {
             $currentTime = $startOfWeek->format('H:i');
 
@@ -210,5 +209,25 @@ class StudentServices{
             $path = $request->file('recording_file')->storeAs('session/recordings',$originalName, 'public');
         }
         return $this->student_repositories_interface->add_session_video($path,$student,$session);
+    }
+    public function cancle_reservation($reservation){
+        $student_id=Auth::guard('student')->user()->id;
+        $student=Students::findOrFail($student_id);
+       $reservation= $student->Reservations()->where('state_reservation','=','Watting_approve')->findOrFail($reservation->id);
+        if(!$reservation){
+            return response()->json(['message'=>'reservation not found',404]);
+        }
+        $now=Carbon::now();
+       $reservationTime = Carbon::parse($reservation->reservation_time);
+       $diffMinute=$now->diffInMinutes($reservationTime,false);
+       if($now->greaterThan($reservationTime)){
+        return response()->json(['message'=>'you cant cancle this reservation , the current time over the reservation time ',422]);
+       }
+       if($diffMinute<90){
+        return response()->json(['message'=>'you cant cancle this reservation , you should cancle reservation before 90 minute at least ',422]);
+       }
+        $reservation->delete();
+        return response()->json(['message'=>'reservation cansle successfully']);
+
     }
 }

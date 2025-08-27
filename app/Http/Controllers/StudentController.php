@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson_reservation;
 use App\Models\Lesson_session;
 use App\Models\School_stage;
 use App\Models\Students;
@@ -163,7 +164,9 @@ class StudentController extends Controller
         ]);
         $session=$this->student_services->add_session_video($request,$session);
         return response()->json(['message'=>'recording uplode to session','session'=>$session[0],'recording_url'=>$session[1]]);
-
     }
-
+    public function cancle_reservation(Lesson_reservation $reservation){
+   return  $this->student_services-> cancle_reservation($reservation);
+       
+    }
 }
