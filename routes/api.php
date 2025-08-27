@@ -72,8 +72,8 @@ Route::middleware('check_teacher')->group(function(){
     Route::post('add_worktime',[TeacherController::class, 'teacher_available_worktime'])->middleware('check_teacher_activate');
     Route::post('search_student',[AdminController::class,'search_student']);
     Route::get('getAllReservation',[TeacherController::class,'get_all_reservation'])->middleware('check_teacher_activate');
-    Route::get('all_teacher_session',[ZoomSessionController::class,'get_session']);
-
+    Route::get('all_teacher_session',[ZoomSessionController::class,'get_session'])->middleware('check_teacher_activate');
+    Route::post('proccess_reservation/{reservation}',[TeacherController::class,'proccess_reservation'])->middleware('check_teacher_activate');
 });
 
 

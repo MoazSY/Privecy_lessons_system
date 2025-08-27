@@ -214,6 +214,34 @@ public function SendAccountForAprrove($request){
     return $reservations;
 
    }
+   public function proccess_reservation($request,$teacher_id,$reservation){
+    $teacher=Teacher::findOrFail($teacher_id);
+    $reservation=$teacher->reservations()->where('state_reservation','=','Watting_approve')->findOrFail($reservation->id);
+    $reservation->state_reservation=$request->input('proccess_type');
+    $reservation->save();
+    if($request->input('proccess_type')=='rejectd'){
+        $student=Students::findOrFail($reservation->student_id);
+        $teacher_subject = $teacher->School_subjects()->wherePivot('school_subject_id', $reservation->subjectable_id)->first();
+        $student->CardValue+=$teacher_subject->pivot->lesson_price-0.15*$teacher_subject->pivot->lesson_price;
+        $student->save();
+    }
+
+    $currentDateTime = Carbon::now();
+    $reservationDateTime = Carbon::parse($reservation->reservation_time);
+    $timeDifference = $currentDateTime->diff($reservationDateTime);
+    $reservation->time_remaining = [
+        'days' => $timeDifference->d,
+        'hours' => $timeDifference->h,
+        'minutes' => $timeDifference->i,
+        'total_hours' => $timeDifference->h + ($timeDifference->d * 24)
+    ];
+    $reservation->is_past = $currentDateTime->greaterThan($reservationDateTime);
+    $reservation->is_upcoming = !$reservation->is_past;
+    $reservation->human_readable = $timeDifference->format('%d day, %h hour, %i minute');
+    return $reservation;
+
+   }
+
    public function get_Available_reservations($teacher,$subject){
 
    }

@@ -195,4 +195,8 @@ protected $teacher_repositories_interface;
         $teacher_id=Auth::guard('teacher')->user()->id;
         return $this->teacher_repositories_interface->get_all_reservations($teacher_id);
     }
+    public function proccess_reservation($request,$reservation){
+    $teacher_id=Auth::guard('teacher')->user()->id;
+    return $this->teacher_repositories_interface->proccess_reservation($request,$teacher_id,$reservation);
+    }
 }

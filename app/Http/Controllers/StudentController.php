@@ -160,7 +160,7 @@ class StudentController extends Controller
         ]);
         $session=$this->student_services->add_session_video($request,$session);
         return response()->json(['message'=>'recording uplode to session','session'=>$session[0],'recording_url'=>$session[1]]);
-        
+
     }
 
 }

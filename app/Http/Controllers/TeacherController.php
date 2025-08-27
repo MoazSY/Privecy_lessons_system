@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson_reservation;
 use App\Services\TeacherServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,6 +93,12 @@ public function update_profile(Request $request){
     $reservation=$this->teacher_services->all_reservation();
     return response()->json(['message'=>'all reservation related to teacher','reservation'=>$reservation]);
     }
-
+    public function proccess_reservation(Request $request , Lesson_reservation $reservation){
+        $validate=Validator::make($request->all(),[
+            'proccess_type'=>'required|in:accepted,rejectd'
+        ]);
+        $reservation=$this->teacher_services->proccess_reservation($request,$reservation);
+        return response()->json(['message'=>'teacher proccess this reservation','reservation'=>$reservation]);
+    }
 
 }
