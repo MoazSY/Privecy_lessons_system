@@ -27,8 +27,8 @@ Schema::create('lesson_session', function (Blueprint $table) {
     $table->string("meeting_id")->nullable(); // ID غرفة Jitsi
     $table->enum("status", ["scheduled", "active", "completed", "cancelled"])->default("scheduled");
     $table->string("recording_path")->nullable(); // مسار التسجيل
-    
-    $table->timestamps();
+
+    $table->timestamps();   
 });
     }
 

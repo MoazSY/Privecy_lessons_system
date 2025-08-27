@@ -78,6 +78,19 @@ public function S_or_G_lesson()
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+        
         public function getRoomUrlAttribute()
         {
         return $this->sesstion_url;

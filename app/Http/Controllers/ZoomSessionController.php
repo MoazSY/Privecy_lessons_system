@@ -26,7 +26,7 @@ class ZoomSessionController extends Controller
         $reservationTime = Carbon::parse($reservation->reservation_time);
         $createTime      = $reservationTime->copy()->subMinutes(15);
 
-        if (now()->lt($createTime)) {
+        if (now()->lt($createTime)||now()->gt($reservationTime)) {
             return response()->json([
                 'success' => false,
                 'message' => 'session will create before 15 minute from start',
@@ -248,5 +248,39 @@ class ZoomSessionController extends Controller
                 'recording_url' => $session->recording_path ? asset('storage/'.$session->recording_path) : null,
             ]
         ]);
+    }
+    public function get_session(Request $request){
+        $token = PersonalAccessToken::findToken($request->bearerToken());
+        $user = $token->tokenable;
+        if ($user instanceof \App\Models\Students) {
+         $lesson_session=$user->lesson_session()->with(['teacher','subjectable'])->orderBy('start_time','asc')->get();
+        }
+         elseif ($user instanceof \App\Models\Teacher) {
+         $lesson_session=$user->lesson_session()->with(['student','subjectable'])->orderBy('start_time','asc')->get();
+
+        }
+   $lesson_session ->map(function ($lesson_session) {
+    $currentDateTime = Carbon::now();
+
+    $reservationDateTime = Carbon::parse($lesson_session->start_time);
+
+    $timeDifference = $currentDateTime->diff($reservationDateTime);
+
+    $lesson_session->time_remaining = [
+        'days' => $timeDifference->d,
+        'hours' => $timeDifference->h,
+        'minutes' => $timeDifference->i,
+        'total_hours' => $timeDifference->h + ($timeDifference->d * 24)
+    ];
+    $lesson_session->can_join= now()->between($lesson_session->start_time, $lesson_session->end_time);
+    $lesson_session->recording_url_session=$lesson_session->recording_path ? asset('storage/'.$lesson_session->recording_path) : null;
+    $lesson_session->is_past = $currentDateTime->greaterThan($reservationDateTime);
+    $lesson_session->is_upcoming = !$lesson_session->is_past;
+    $lesson_session->human_readable = $timeDifference->format('%d day, %h hour, %i minute');
+
+    return $lesson_session;
+});
+
+return response()->json(['message'=>'all sessions related to user','sessions'=>$lesson_session]);
     }
 }

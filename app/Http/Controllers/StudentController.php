@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson_session;
 use App\Models\School_stage;
 use App\Models\Students;
 use App\Models\University_stage;
@@ -153,6 +154,13 @@ class StudentController extends Controller
         $result=$this->student_services->get_Available_reservations($request);
         return response()->json(['message'=>'all reservations table for teacher','reservation_table'=>$result]);
     }
-
+    public function add_session_video(Request $request,Lesson_session $session){
+        $request->validate([
+        'recording_file' => 'required|file|mimes:mp4,mov,mkv,webm,avi|max:512000', // حتى 500MB مثالاً
+        ]);
+        $session=$this->student_services->add_session_video($request,$session);
+        return response()->json(['message'=>'recording uplode to session','session'=>$session[0],'recording_url'=>$session[1]]);
+        
+    }
 
 }

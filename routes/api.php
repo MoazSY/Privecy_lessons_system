@@ -6,6 +6,7 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\StagesSubjectsController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\ZoomSessionController;
 use App\Services\Stages_subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,8 @@ Route::middleware('check_students')->group(function(){
     Route::post('student_search_teacher',[AdminController::class,'search_teacher']);
     Route::post('lesson_reservation',[StudentController::class,'lesson_reservation']);
     Route::get('get_all_reservation',[StudentController::class,'get_all_reservation']);
-
+    Route::get('all_student_session',[ZoomSessionController::class,'get_session']);
+    Route::post('uplode_recording_session/{session}',[StudentController::class,'add_session_video']);
 });
 Route::middleware('check_admin')->group(function(){
 Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);
@@ -70,6 +72,7 @@ Route::middleware('check_teacher')->group(function(){
     Route::post('add_worktime',[TeacherController::class, 'teacher_available_worktime'])->middleware('check_teacher_activate');
     Route::post('search_student',[AdminController::class,'search_student']);
     Route::get('getAllReservation',[TeacherController::class,'get_all_reservation'])->middleware('check_teacher_activate');
+    Route::get('all_teacher_session',[ZoomSessionController::class,'get_session']);
 
 });
 
@@ -84,10 +87,6 @@ Route::middleware('check_teacher')->group(function(){
 //     Route::post('/end/{sessionId}', [JitsiSessionController::class, 'endSession']);
 // });
 
-
-
-
-use App\Http\Controllers\ZoomSessionController;
 
 Route::prefix('zoom')->group(function () {
     Route::post('/sessions/{reservationId}/auto-create', [ZoomSessionController::class, 'autoCreateSession']);

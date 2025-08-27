@@ -203,5 +203,12 @@ class StudentServices{
         $student_id=Auth::guard('student')->user()->id;
         return $this->student_repositories_interface->get_all_reservations($student_id);
     }
-
+    public function add_session_video($request,$session){
+        $student=Auth::guard('student')->user();
+          if ($request->hasFile('recording_file')) {
+            $originalName=$request->file('recording_file')->getClientOriginalName();
+            $path = $request->file('recording_file')->storeAs('session/recordings',$originalName, 'public');
+        }
+        return $this->student_repositories_interface->add_session_video($path,$student,$session);
+    }
 }

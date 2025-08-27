@@ -305,7 +305,19 @@ $reservations = $student->reservations()
 });
 return $reservations;
 }
-
+public function add_session_video($path,$student,$session){
+$student=Students::findOrFail($student->id);
+$session=$student->lesson_session()->findOrFail($session->id);
+if($session){
+    $session->recording_path=$path;
+    $session->save();
+    $session_recording_url=asset('storage/' . $path);
+}
+else{
+    $session_recording_url=null;
+}
+return [$session,$session_recording_url];
+}
 
 
 

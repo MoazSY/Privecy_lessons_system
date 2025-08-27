@@ -91,7 +91,6 @@ public function update_profile(Request $request){
     public function get_all_reservation(){
     $reservation=$this->teacher_services->all_reservation();
     return response()->json(['message'=>'all reservation related to teacher','reservation'=>$reservation]);
-
     }
 
 

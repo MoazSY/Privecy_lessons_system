@@ -27,5 +27,5 @@ public function ShowSlider();
 public function Report($student,$lesson);
 public function Payment($student,$teacher,$request);
 public function get_all_reservations($student_id);
-
+public function add_session_video($path,$student,$session);
 }
