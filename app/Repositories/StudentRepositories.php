@@ -214,6 +214,26 @@ return $attached;
 public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice)
 {
     $student=Students::findOrFail($student_id);
+    
+    $durationObj     = Carbon::createFromFormat('H:i:s', $lessonDuration);
+    $lesson_duration = $durationObj->hour * 60 + $durationObj->minute;
+
+    $requestedStart = Carbon::createFromFormat('Y-m-d H:i', $request->reservation_time);
+    $requestedEnd   = $requestedStart->copy()->addMinutes($lesson_duration);
+
+    $hasOverlap = Lesson_reservation::where('student_id', $student_id)
+        ->whereIn('state_reservation', ['Watting_approve', 'accepted'])
+        ->whereDate('reservation_time', $requestedStart->toDateString()) 
+        ->where('reservation_time', '<', $requestedEnd->format('Y-m-d H:i:s')) // existing_start < requested_end
+        ->whereRaw('DATE_ADD(reservation_time, INTERVAL duration MINUTE) > ?', [
+            $requestedStart->format('Y-m-d H:i:s') // existing_end > requested_start
+        ])
+        ->exists();
+
+    if ($hasOverlap) {
+        return 'overlap';
+    }
+
 DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice){
    $admin= $this->getRandomAdmin();
 

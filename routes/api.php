@@ -77,16 +77,6 @@ Route::middleware('check_teacher')->group(function(){
 });
 
 
-// // routes/api.php
-// Route::prefix('jitsi-sessions')->group(function () {
-//     Route::post('/auto-create/{reservationId}', [JitsiSessionController::class, 'autoCreateSession']);
-//     Route::get('/teacher/join/{sessionId}', [JitsiSessionController::class, 'joinAsTeacher']);
-//     Route::get('/student/join/{sessionId}', [JitsiSessionController::class, 'joinAsStudent']);
-//     Route::get('/rejoin/{sessionId}/{userType}', [JitsiSessionController::class, 'rejoinSession']);
-//     Route::get('/{sessionId}', [JitsiSessionController::class, 'getSessionInfo']);
-//     Route::post('/end/{sessionId}', [JitsiSessionController::class, 'endSession']);
-// });
-
 
 Route::prefix('zoom')->group(function () {
     Route::post('/sessions/{reservationId}/auto-create', [ZoomSessionController::class, 'autoCreateSession']);

@@ -136,6 +136,9 @@ class StudentController extends Controller
         if($reservation=="null"){
             return response()->json(['message'=>'you should check your card not enought money ']);
         }
+        if ($reservation === "overlap") {
+        return response()->json(['message' => 'you cant reserve lesson in this time because you have a reservation in this time'], 422);
+        }
         return response()->json(['message'=>'the reservation of lesson is done successfully','reservation'=>$reservation]);
     }
     public function get_all_reservation(){
