@@ -67,6 +67,10 @@ class ZoomService
                 'host_video'       => true,
                 'participant_video'=> true,
                 'allow_multiple_devices'=> true,
+                'end_meeting_on_host_leave' => false,
+                 'auto_recording'        => 'local',   // تسجيل تلقائي
+                 'approval_type'         => 0,         // السماح للمشاركين بالانضمام تلقائيًا
+                 'alternative_hosts'=> '',
             ],
         ];
 

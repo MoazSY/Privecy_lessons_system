@@ -213,7 +213,7 @@ class StudentServices{
     public function cancle_reservation($reservation){
         $student_id=Auth::guard('student')->user()->id;
         $student=Students::findOrFail($student_id);
-       $reservation= $student->Reservations()->where('state_reservation','=','Watting_approve')->findOrFail($reservation->id);
+       $reservation= $student->Reservations()->whereIn('state_reservation',['Watting_approve','accepted'])->findOrFail($reservation->id);
         if(!$reservation){
             return response()->json(['message'=>'reservation not found',404]);
         }
