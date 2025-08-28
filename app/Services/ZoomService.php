@@ -60,6 +60,7 @@ class ZoomService
             'type'       => 2,
             'start_time' => $startUTC,
             'duration'   => $duration,
+            "timezone"=> "Asia/Damascus",
             'settings'   => [
                 'join_before_host' => true,
                 'waiting_room'     => false,

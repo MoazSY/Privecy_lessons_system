@@ -34,7 +34,7 @@ public function lesson_session(){
     return $this->morphMany(Lesson_session::class,'S_or_G_lesson');
 }
         public function teacher(){
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Teacher::class); 
     }
     public function student(){
         return $this->belongsTo(Students::class);

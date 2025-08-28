@@ -254,12 +254,14 @@ class ZoomSessionController extends Controller
         $user = $token->tokenable;
         if ($user instanceof \App\Models\Students) {
          $lesson_session=$user->lesson_session()->with(['teacher','subjectable'])->orderBy('start_time','asc')->get();
+         $role='student';
         }
          elseif ($user instanceof \App\Models\Teacher) {
          $lesson_session=$user->lesson_session()->with(['student','subjectable'])->orderBy('start_time','asc')->get();
+         $role='teacher';
 
         }
-   $lesson_session ->map(function ($lesson_session) {
+   $lesson_session ->map(function ($lesson_session)use ($role) {
     $currentDateTime = Carbon::now();
 
     $reservationDateTime = Carbon::parse($lesson_session->start_time);
@@ -277,7 +279,17 @@ class ZoomSessionController extends Controller
     $lesson_session->is_past = $currentDateTime->greaterThan($reservationDateTime);
     $lesson_session->is_upcoming = !$lesson_session->is_past;
     $lesson_session->human_readable = $timeDifference->format('%d day, %h hour, %i minute');
-
+    $lesson_session->teacherDuration=$lesson_session->teacher_duration_minutes;
+    if($role=='teacher'){
+        $haspaid = optional(
+        $lesson_session->S_or_G_lesson?->payments()->latest()->first()
+        )->admin_payout_teacher;
+        $teacherGain = optional(
+        $lesson_session->S_or_G_lesson?->payments()->latest()->first()
+        )->teacher_amount_final;
+        $lesson_session->adminPay=$haspaid;
+        $lesson_session->teacherGain=$teacherGain;
+    }
     return $lesson_session;
 });
 

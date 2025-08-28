@@ -100,5 +100,6 @@ public function update_profile(Request $request){
         $reservation=$this->teacher_services->proccess_reservation($request,$reservation);
         return response()->json(['message'=>'teacher proccess this reservation','reservation'=>$reservation]);
     }
+    
 
 }

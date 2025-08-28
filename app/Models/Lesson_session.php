@@ -41,7 +41,7 @@ class Lesson_session extends Model
 
 public function S_or_G_lesson()
 {
-    return $this->morphTo(__FUNCTION__, 's_or_g_lesson_type', 's_or_g_lesson_id');
+    return $this->morphTo(__FUNCTION__, 'S_or_G_lesson_type', 'S_or_G_lesson_id');
 }
         public function teacher(){
         return $this->belongsTo(Teacher::class);
@@ -90,7 +90,7 @@ public function S_or_G_lesson()
 
 
 
-        
+
         public function getRoomUrlAttribute()
         {
         return $this->sesstion_url;
