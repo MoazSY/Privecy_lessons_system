@@ -16,4 +16,5 @@ namespace App\Repositories;
     public function get_Available_reservations($teacher,$subject);
     public function get_all_reservations($teacher_id);
     public function proccess_reservation($request,$teacher,$reservation);
+    public function Acceptance_cash_delivery($teacher_id,$request,$cash_delevery);
  }

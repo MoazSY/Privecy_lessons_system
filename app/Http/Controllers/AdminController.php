@@ -194,6 +194,9 @@ class AdminController extends Controller
         if($delivery_cash=='cash_larger_card'){
             return response()->json(['message'=>'teacher card is less than cash']);
         }
+        if($delivery_cash=='Not_enought_cash'){
+            return response()->json(['message'=>'admin dont have enought cash for deliver']);
+        }
         return response()->json(['message'=>'cash deliver to teacher successfully','cash'=>$delivery_cash]);
     }
 }

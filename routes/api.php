@@ -75,6 +75,7 @@ Route::middleware('check_teacher')->group(function(){
     Route::get('getAllReservation',[TeacherController::class,'get_all_reservation'])->middleware('check_teacher_activate');
     Route::get('all_teacher_session',[ZoomSessionController::class,'get_session'])->middleware('check_teacher_activate');
     Route::post('proccess_reservation/{reservation}',[TeacherController::class,'proccess_reservation'])->middleware('check_teacher_activate');
+    Route::post('Acceptance_cash_delivery/{delivery_cash}',[TeacherController::class,'Acceptance_cash_delivery']);
 });
 
 

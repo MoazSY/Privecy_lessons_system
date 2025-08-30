@@ -9,6 +9,8 @@ use App\Models\Teacher_school_subjects;
 use App\Models\Teacher_university_stage;
 use App\Models\University_stage;
 use App\Models\University_subjects;
+use App\Models\Delivery_cash_teacher;
+use App\Models\Admin;
 use Illuminate\Support\Carbon;
 
  class TeacherRepositories implements TeacherRepositoriesInterface{
@@ -241,7 +243,28 @@ public function SendAccountForAprrove($request){
     return $reservation;
 
    }
-
+   public function Acceptance_cash_delivery($teacher_id,$request,$cash_delivery){
+    $teacher=Teacher::findOrFail($teacher_id);
+    // $cash_delivery=Delivery_cash_teacher::findOrFail($cash_delivery->id);
+    $cash_delivery=$teacher->Delivery_cash_teacher()->where('id','=',$cash_delivery->id)->where(function($query) {
+        $query->where('teacher_acceptance', '!=', true)
+        ->orWhereNull('teacher_acceptance');
+    })->first();
+    $admin=Admin::findOrFail($cash_delivery->admin_id);
+    if($request->teacher_acceptance==true){
+        $cash_delivery->teacher_acceptance=true;
+        $teacher->CardValue-=$cash_delivery->cash_value;
+        $admin->CardValue-=$cash_delivery->cash_value;
+        $cash_delivery->save();
+        $teacher->save();
+        $admin->save();
+    }
+    else{
+        $cash_delivery->teacher_acceptance=false;
+        $cash_delivery->save();
+    }
+    return $cash_delivery;
+   } 
    public function get_Available_reservations($teacher,$subject){
 
    }

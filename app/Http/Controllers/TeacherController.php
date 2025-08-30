@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Delivery_cash_teacher;
 use App\Models\Lesson_reservation;
 use App\Services\TeacherServices;
 use Illuminate\Http\Request;
@@ -100,6 +101,13 @@ public function update_profile(Request $request){
         $reservation=$this->teacher_services->proccess_reservation($request,$reservation);
         return response()->json(['message'=>'teacher proccess this reservation','reservation'=>$reservation]);
     }
-    
+    public function Acceptance_cash_delivery(Request $request,Delivery_cash_teacher $delivery_cash){
+        $validate=Validator::make($request->all(),[
+            'teacher_acceptance'=>'required|boolean'
+        ]);
+        $acceptance=$this->teacher_services->Acceptance_cash_delivery($request,$delivery_cash);
+        return response()->json(['message'=>'teacher acceptance for cash delivery','acceptance'=>$acceptance]);
+
+    }
 
 }

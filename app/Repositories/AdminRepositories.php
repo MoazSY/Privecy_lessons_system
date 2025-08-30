@@ -203,6 +203,9 @@ use Illuminate\Support\Facades\Hash;
         if($teacher->CardValue<$request->cash_value){
             return 'cash_larger_card';
         }
+        if($admin->CardValue<$request->cash_value){
+            return "Not_enought_cash";
+        }
         $admin->Delivery_cash_teacher()->attach([$request->teacher_id=>['cash_value'=>$request->cash_value,'delivery_time'=>Carbon::now()]]);
         $cash=$admin->Delivery_cash_teacher()->orderBy('delivery_time','desc')->first();
         return $cash;

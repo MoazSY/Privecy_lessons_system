@@ -199,4 +199,9 @@ protected $teacher_repositories_interface;
     $teacher_id=Auth::guard('teacher')->user()->id;
     return $this->teacher_repositories_interface->proccess_reservation($request,$teacher_id,$reservation);
     }
+
+    public function Acceptance_cash_delivery($request,$cash_delevery){
+    $teacher_id=Auth::guard('teacher')->user()->id;
+    return $this->teacher_repositories_interface->Acceptance_cash_delivery($teacher_id,$request,$cash_delevery);
+    }
 }
