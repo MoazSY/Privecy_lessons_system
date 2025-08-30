@@ -11,4 +11,5 @@ interface AdminRepositoriesInterface{
     public function Admin_profile($admin);
     public function proccess_teacher_account($teacher, $request);
     public function charging_card($admin,$request);
+    public function delivery_cash_teacher($admin_id,$request);
 }

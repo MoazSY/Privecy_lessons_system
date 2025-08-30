@@ -37,4 +37,7 @@ class Admin extends Authenticatable
     public function Card_charging(){
         return $this->belongsToMany(Students::class,'student_card_charging','admin_id','students_id')->withPivot('card_charging','charging_time')->withTimestamps();
     }
+    public function Delivery_cash_teacher(){
+        return $this->belongsToMany(Teacher::class,'delivery_cash_teacher','admin_id','teacher_id')->withPivot('cash_value','delivery_time')->withTimestamps();
+    }
 }

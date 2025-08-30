@@ -193,7 +193,7 @@ public function login($request){
         withCount(['folowing_value' => fn($q) => $q->where('following_state', true)])
         ->with(['School_subjects', 'University_subjects', 'available_worktime'])
         ->where('Activate_Account', true);
-        
+
         if($request->filled('phoneNumber')){
             $query->where('phoneNumber','=',$request->input('phoneNumber'));
         }
@@ -212,5 +212,10 @@ public function login($request){
         ];
     });
     return $result;
+    }
+
+    public function delivery_cash_teacher($request){
+    $admin_id=Auth::guard('admin')->user()->id;
+    return $this->admin_repositories_interface->delivery_cash_teacher($admin_id,$request);
     }
 }

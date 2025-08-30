@@ -268,12 +268,13 @@ class ZoomSessionController extends Controller
 
     $timeDifference = $currentDateTime->diff($reservationDateTime);
 
-    $lesson_session->time_remaining = [
-        'days' => $timeDifference->d,
-        'hours' => $timeDifference->h,
-        'minutes' => $timeDifference->i,
-        'total_hours' => $timeDifference->h + ($timeDifference->d * 24)
-    ];
+    // $lesson_session->time_remaining = [
+    //     'days' => $timeDifference->d,
+    //     'hours' => $timeDifference->h,
+    //     'minutes' => $timeDifference->i,
+    //     'total_hours' => $timeDifference->h + ($timeDifference->d * 24)
+    // ];
+
     $lesson_session->can_join= now()->between($lesson_session->start_time, $lesson_session->end_time);
     $lesson_session->recording_url_session=$lesson_session->recording_path ? asset('storage/'.$lesson_session->recording_path) : null;
     $lesson_session->is_past = $currentDateTime->greaterThan($reservationDateTime);

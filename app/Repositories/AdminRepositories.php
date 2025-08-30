@@ -12,6 +12,7 @@ use App\Models\University_subjects;
 use App\Models\Student_card_charging;
 use App\Models\Students;
 use App\Repositories\AdminRepositoriesInterface ;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -196,5 +197,14 @@ use Illuminate\Support\Facades\Hash;
         $admin->save();
         return $chargingCards;
     }
-
+    public function delivery_cash_teacher($admin_id,$request){
+        $admin=Admin::findOrFail($admin_id);
+        $teacher=Teacher::findOrFail($request->teacher_id);
+        if($teacher->CardValue<$request->cash_value){
+            return 'cash_larger_card';
+        }
+        $admin->Delivery_cash_teacher()->attach([$request->teacher_id=>['cash_value'=>$request->cash_value,'delivery_time'=>Carbon::now()]]);
+        $cash=$admin->Delivery_cash_teacher()->orderBy('delivery_time','desc')->first();
+        return $cash;
+    }
 }

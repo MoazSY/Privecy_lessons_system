@@ -157,8 +157,8 @@ class AdminController extends Controller
     }
     public function student_card_charging(Request $request){
         $validate=Validator::make($request->all(),[
-            'student_id',
-            'card_charging',
+            'student_id'=>'required|exists:students,id',
+            'card_charging'=>'required|integer',
         ]);
         if($validate->fails()){
             return response()->json(['message'=>$validate->errors()]);
@@ -183,5 +183,17 @@ class AdminController extends Controller
         ]);
         $teacher=$this->admin_services->search_teacher($request);
         return response()->json(['message'=>'result search to teacher','teachers'=>$teacher]);
+    }
+    public function delivery_cash_teacher(Request $request ){
+        $validate=Validator::make($request->all(),[
+            'cash_value'=>'required|integer',
+            'teacher_id'=>'required|exists:teacher,id'
+            // 'delivery_time'=>'required|date_format:Y-m-d H:i'
+        ]);
+        $delivery_cash=$this->admin_services->delivery_cash_teacher($request);
+        if($delivery_cash=='cash_larger_card'){
+            return response()->json(['message'=>'teacher card is less than cash']);
+        }
+        return response()->json(['message'=>'cash deliver to teacher successfully','cash'=>$delivery_cash]);
     }
 }
