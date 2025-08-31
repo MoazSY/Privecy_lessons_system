@@ -35,7 +35,7 @@ class Payment_transaction extends Model
     // }
 public function S_or_G_lesson()
 {
-    return $this->morphTo(__FUNCTION__, 's_or_g_lesson_type', 's_or_g_lesson_id');
+    return $this->morphTo(__FUNCTION__, 'S_or_G_lesson_type', 'S_or_G_lesson_id');
 }
 
 }

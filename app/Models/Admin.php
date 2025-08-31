@@ -40,4 +40,7 @@ class Admin extends Authenticatable
     public function Delivery_cash_teacher(){
         return $this->belongsToMany(Teacher::class,'delivery_cash_teacher','admin_id','teacher_id')->withPivot('cash_value','delivery_time')->withTimestamps();
     }
+    public function Report(){
+        return $this->hasMany(Report::class,'admin_id');
+    }
 }

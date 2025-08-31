@@ -11,6 +11,8 @@ use App\Models\Student_subject;
 use App\Models\Students;
 use App\Models\University_stage;
 use App\Models\University_subjects;
+use App\Models\Lesson_session;
+use App\Models\Report;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -214,7 +216,7 @@ return $attached;
 public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice)
 {
     $student=Students::findOrFail($student_id);
-    
+
     $durationObj     = Carbon::createFromFormat('H:i:s', $lessonDuration);
     $lesson_duration = $durationObj->hour * 60 + $durationObj->minute;
 
@@ -223,7 +225,7 @@ public function reservation($request,$student_id,$subject,$lessonDuration,$lesso
 
     $hasOverlap = Lesson_reservation::where('student_id', $student_id)
         ->whereIn('state_reservation', ['Watting_approve', 'accepted'])
-        ->whereDate('reservation_time', $requestedStart->toDateString()) 
+        ->whereDate('reservation_time', $requestedStart->toDateString())
         ->where('reservation_time', '<', $requestedEnd->format('Y-m-d H:i:s')) // existing_start < requested_end
         ->whereRaw('DATE_ADD(reservation_time, INTERVAL duration MINUTE) > ?', [
             $requestedStart->format('Y-m-d H:i:s') // existing_end > requested_start
@@ -234,7 +236,7 @@ public function reservation($request,$student_id,$subject,$lessonDuration,$lesso
         return 'overlap';
     }
 
-DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice){
+ DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice){
    $admin= $this->getRandomAdmin();
 
     $duration = Carbon::createFromFormat('H:i:s', $lessonDuration);
@@ -339,7 +341,26 @@ else{
 return [$session,$session_recording_url];
 }
 
-
+public function report($student,$request,$session,$path){
+$student=Students::findOrFail($student);
+$session=Lesson_session::findOrFail($session->id);
+$now=Carbon::now();
+$end_time=Carbon::parse($session->end_time);
+if($now > $end_time->copy()->addMinutes(10)){
+    return null;
+}
+$report=$student->Report()->create([
+    'admin_id'=>$session->S_or_G_lesson->payments->first()->Admin_Id,
+    'student_id'=>$student->id,
+    'lesson_session'=>$session->id,
+    'type_report'=>$request->input("type_report"),
+    'reference_report_path'=>$path,
+    'descreption'=>$request->input('descreption') ?: null,
+    'time_report'=>$now,
+    'state'=>'In_Review'
+]);
+return $report;
+}
 
 public function ShowTeacherAvailable($student)
 {
@@ -378,10 +399,7 @@ public function ShowSlider()
 {
 
 }
-public function Report($student, $lesson)
-{
 
-}
 public function Payment($student, $teacher, $request)
 {
 

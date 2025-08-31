@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Models\Admin;
+use App\Models\Payment_transaction;
 use App\Models\School_stage;
 use App\Models\School_subjects;
 use App\Models\Teacher;
@@ -209,5 +210,34 @@ use Illuminate\Support\Facades\Hash;
         $admin->Delivery_cash_teacher()->attach([$request->teacher_id=>['cash_value'=>$request->cash_value,'delivery_time'=>Carbon::now()]]);
         $cash=$admin->Delivery_cash_teacher()->orderBy('delivery_time','desc')->first();
         return $cash;
+    }
+    public function teacher_for_delivery($admin_id){
+    $admin=Admin::findOrFail($admin_id);
+    $teacherNotPay=Payment_transaction::where('admin_id','=',$admin_id)->where('admin_payout_teacher','=',false)->get();
+
+    $pay = $teacherNotPay->filter(function ($teacher_N_Pay) {
+
+        $lessonSession = $teacher_N_Pay->S_or_G_lesson->lesson_session->first();
+        if ($lessonSession) {
+        $end_time = $lessonSession->end_time;
+        } else {
+        return false;
+        }
+        $end_time = Carbon::parse($end_time);
+        $now = Carbon::now();
+         return $now >= $end_time->copy()->addMinutes(15);
+        // return true;
+    })->map(function ($teacher_N_Pay) {
+        $session = $teacher_N_Pay->S_or_G_lesson->lesson_session->first();
+        $teacher_N_Pay->session = $session;
+        $teacher_N_Pay->teacher_duration = $session->calculateTeacherDuration();
+        $teacher_N_Pay->report=$session->Report;
+        return $teacher_N_Pay;
+    });
+
+    if($pay->isEmpty()){
+        return null;
+    }
+    return $pay;
     }
 }

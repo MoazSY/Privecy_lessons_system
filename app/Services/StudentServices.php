@@ -230,4 +230,15 @@ class StudentServices{
         return response()->json(['message'=>'reservation cansle successfully']);
 
     }
+    public function report($request,$session){
+        $student_id=Auth::guard('student')->user()->id;
+        if($request->hasFile('reference_report_path')){
+            $originalName=$request->file('reference_report_path')->getClientOriginalName();
+            $path=$request->file('reference_report_path')->storeAs('students/reports',$originalName,'public');
+        }
+        else{
+            $path=null;
+        }
+        return $this->student_repositories_interface->report($student_id,$request,$session,$path);
+    }
 }

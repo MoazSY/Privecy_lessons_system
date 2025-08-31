@@ -19,12 +19,13 @@ public function TeacherRating($student,$teacher);
 public function TeacherFollowing($student,$teacher,$RecieveNotification);
 public function ShowTeacherProfile($teacher);
 public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice);
+public function report($student,$request,$session,$path);
+
 public function GetAvailableTimeTeacher($teacher);
 public function GetStages_Subjecs_Teacher($teacher);
 public function GetReservation($student);
 public function GetLessonse($student);
 public function ShowSlider();
-public function Report($student,$lesson);
 public function Payment($student,$teacher,$request);
 public function get_all_reservations($student_id);
 public function add_session_video($path,$student,$session);

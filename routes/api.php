@@ -50,6 +50,7 @@ Route::middleware('check_students')->group(function(){
     Route::get('all_student_session',[ZoomSessionController::class,'get_session']);
     Route::post('uplode_recording_session/{session}',[StudentController::class,'add_session_video']);
     Route::post('cancle_reservation/{reservation}',[StudentController::class,'cancle_reservation']);
+    Route::post('report_session/{session}',[StudentController::class,'report_session']);
 });
 Route::middleware('check_admin')->group(function(){
 Route::post('Add_school_stage',[AdminController::class, 'Add_school_stage']);
@@ -61,9 +62,10 @@ Route::post('proccess_teacher_account/{teacher}',[AdminController::class, 'procc
 Route::get('get_profile',[AdminController::class,'Admin_profile']);
 Route::post('update_profile',[AdminController::class,'update_profile']);
 Route::post('student_card_charging',[AdminController::class,'student_card_charging']);
-Route::post('search_student',[AdminController::class,'search_student']);
+Route::post('search_student1',[AdminController::class,'search_student']);
 Route::post('search_teacher',[AdminController::class,'search_teacher']);
 Route::post('delivery_cash_teacher',[AdminController::class,'delivery_cash_teacher']);
+Route::get('get_teacher_for_delivery',[AdminController::class,'get_teacher_for_delivery']);
 });
 
 Route::middleware('check_teacher')->group(function(){

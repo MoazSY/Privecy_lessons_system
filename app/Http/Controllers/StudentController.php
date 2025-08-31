@@ -169,4 +169,17 @@ class StudentController extends Controller
    return  $this->student_services-> cancle_reservation($reservation);
        
     }
+    public function report_session(Request $request, Lesson_session $session){
+        $validate=Validator::make($request->all(),[
+            'type_report'=>"required|string",
+            'reference_report_path'=>'sometimes|file|mimes:mp4,mov,mkv,webm,avi|max:20',
+            'descreption'=>'sometimes',
+            
+        ]);
+        $report=$this->student_services->report($request,$session);
+        if($report==null){
+            return response()->json(['message'=>'you cant report to session after 10 minute from end session']);
+        }
+        return response()->json(['message'=>'report to session','report'=>$report]);
+    }
 }

@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('report', function (Blueprint $table) {
+        Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId("admin_id")->references("id")->on("admin")->onDelete("cascade");
             $table->foreignId("student_id")->references("id")->on("students")->onDelete("cascade");
             $table->foreignId("lesson_session")->references("id")->on("lesson_session")->onDelete("cascade");
-            $table->json("type_report");
-            $table->string("reference_report_url")->nullable();
-            $table->longText("descreption");
-            $table->dateTime("time_report");
-            $table->enum("state",["Open", "In_Review", "Resolved"]);
+            $table->string("type_report");
+            $table->string("reference_report_path")->nullable();
+            $table->longText("descreption")->nullable();
+            $table->dateTime("time_report")->nullable();
+            $table->enum("state",["Open", "In_Review", "Resolved"])->nullable();
             $table->timestamps();
         });
     }

@@ -199,4 +199,11 @@ class AdminController extends Controller
         }
         return response()->json(['message'=>'cash deliver to teacher successfully','cash'=>$delivery_cash]);
     }
+    public function get_teacher_for_delivery(){
+        $deliver_teacher=$this->admin_services->teacher_for_delivery();
+        if($deliver_teacher==null){
+            return response()->json(['message'=>'not found any teacher for delivery']);
+        }
+        return response()->json(['message'=>'all teacher who is not recieve money','teacher'=>$deliver_teacher]);
+    }
 }

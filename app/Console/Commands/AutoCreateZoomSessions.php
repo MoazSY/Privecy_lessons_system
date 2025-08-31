@@ -18,13 +18,19 @@ class AutoCreateZoomSessions extends Command
         $zoom = new ZoomService();
         $now  = now();
 
-        $reservations = Lesson_reservation::where('state_reservation','accepted')
-            ->whereBetween('reservation_time', [
-                $now->copy()->addMinutes(15),
-                $now->copy()->addMinutes(16),
-            ])
-            ->whereDoesntHave('lesson_session')
-            ->get();
+        // $reservations = Lesson_reservation::where('state_reservation','accepted')
+        //     ->whereBetween('reservation_time', [
+        //         $now->copy()->addMinutes(15),
+        //         $now->copy()->addMinutes(16),
+        //     ])
+        //     ->whereDoesntHave('lesson_session')
+        //     ->get();
+
+        $reservations = Lesson_reservation::where('state_reservation', 'accepted')
+        ->where('reservation_time', '>=', $now)                    
+        ->where('reservation_time', '<=', $now->copy()->addMinutes(15)) 
+        ->whereDoesntHave('lesson_session')
+        ->get();
 
         foreach ($reservations as $r) {
             try {

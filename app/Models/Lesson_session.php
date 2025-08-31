@@ -58,6 +58,9 @@ public function S_or_G_lesson()
         return $this->hasMany(\App\Models\LessonSessionPresence::class, 'lesson_session_id');
         }
 
+        public function Report(){
+            return $this->hasMany(Report::class,'lesson_session');
+        }
         /**
          * جمع مدة وجود المدرس بالدقائق عبر كل الفترات
          */

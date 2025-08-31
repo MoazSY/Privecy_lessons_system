@@ -69,4 +69,7 @@ class Students extends Authenticatable
     public function card_charging(){
         return $this->hasMany(Student_card_charging::class);
     }
+    public function report(){
+        return $this->hasMany(Report::class,'student_id');
+    }
 }
