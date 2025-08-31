@@ -231,7 +231,17 @@ use Illuminate\Support\Facades\Hash;
         $session = $teacher_N_Pay->S_or_G_lesson->lesson_session->first();
         $teacher_N_Pay->session = $session;
         $teacher_N_Pay->teacher_duration = $session->calculateTeacherDuration();
-        $teacher_N_Pay->report=$session->Report;
+        $teacher_N_Pay->report=$session->Report()->get()->map(function($s){
+            if($s->reference_report_path!=null){
+                $fileUrl=asset('storage/'.$s->reference_report_path);
+                return ['report'=>$s,'fileUrl'=>$fileUrl];
+            }
+                return ['report'=>$s,'fileUrl'=>null];
+
+        });
+        $teacher_N_Pay->teacher=$session->teacher;
+        $teacher_N_Pay->student=$session->student;
+
         return $teacher_N_Pay;
     });
 
