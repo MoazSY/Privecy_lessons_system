@@ -204,4 +204,33 @@ protected $teacher_repositories_interface;
     $teacher_id=Auth::guard('teacher')->user()->id;
     return $this->teacher_repositories_interface->Acceptance_cash_delivery($teacher_id,$request,$cash_delevery);
     }
+    public function ShowAllNotifications(){
+        $user=Auth::guard('teacher')->user();
+        $unreadNotifications = $user->unreadNotifications->map(function ($notification) {
+            return [
+                'id' => $notification->id,
+                'data' => $notification->data,
+            ];
+        });
+        $readNotifications = $user->readNotifications->map(function ($notification) {
+            return [
+                'id' => $notification->id,
+                'data' => $notification->data,
+            ];
+        });
+        return response()->json([
+            'unread' => $unreadNotifications,
+            'read' => $readNotifications,
+        ]);
+    }
+        public function markAsRead($id)
+        {
+        $notification = Auth::guard('teacher')->user()->notifications->where('id', $id)->first();
+        if ($notification) {
+        $notification->markAsRead();
+        return response()->json(['message' => 'Notification marked as read']);
+        }
+
+        return response()->json(['message' => null]);
+        }
 }

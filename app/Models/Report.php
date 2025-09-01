@@ -20,4 +20,7 @@ class Report extends Model
         'time_report',
         'state'
     ];
+    public function session(){
+        return $this->belongsTo(Lesson_session::class,'lesson_session');
+    }
 }

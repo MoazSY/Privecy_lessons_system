@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Lesson_reservation;
 use App\Models\Lesson_session;
+use App\Models\Students;
+use App\Models\Teacher;
+use App\Notifications\sessionStart;
 use App\Services\ZoomService;
 use Carbon\Carbon;
 
@@ -27,8 +30,8 @@ class AutoCreateZoomSessions extends Command
         //     ->get();
 
         $reservations = Lesson_reservation::where('state_reservation', 'accepted')
-        ->where('reservation_time', '>=', $now)                    
-        ->where('reservation_time', '<=', $now->copy()->addMinutes(15)) 
+        ->where('reservation_time', '>=', $now)
+        ->where('reservation_time', '<=', $now->copy()->addMinutes(15))
         ->whereDoesntHave('lesson_session')
         ->get();
 
@@ -42,7 +45,7 @@ class AutoCreateZoomSessions extends Command
 
                 $m = $zoom->createMeeting($topic, $start->toIso8601String(), (int)$r->duration);
 
-                Lesson_session::create([
+                $session=Lesson_session::create([
                     'teacher_id'        => $r->teacher_id,
                     'student_id'        => $r->student_id,
                     'subjectable_id'    => $r->subjectable_id,
@@ -56,6 +59,10 @@ class AutoCreateZoomSessions extends Command
                     'meeting_id'        => $m['meeting_id'],
                     'status'            => 'scheduled',
                 ]);
+                $student=Students::findOrFail($r->student_id);
+                $teacher=Teacher::findOrFail($r->teacher_id);
+                $student->notify(new sessionStart($student,$teacher,'student',$session));
+                $teacher->notify(new sessionStart($student,$teacher,'teacher',$session));
 
                 $this->info("Created Zoom session for reservation {$r->id} (meeting {$m['meeting_id']})");
             } catch (\Throwable $e) {

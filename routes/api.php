@@ -7,6 +7,7 @@ use App\Http\Controllers\StagesSubjectsController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ZoomSessionController;
+use App\Http\Controllers\NotificationsController;
 use App\Services\Stages_subjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,9 @@ Route::middleware('check_auth')->group(function(){
     Route::post('Choose_university_study_stage', [StagesSubjectsController::class, 'Choose_university_study_stage']);
     Route::get('get_university_stage_subjects/{university_stage}', [StagesSubjectsController::class, 'get_university_stage_subjects']);
     Route::post('choose_university_subjects', [StagesSubjectsController::class, 'choose_university_subjects']);
+
+    Route::get('ShowAllNotifications', [NotificationsController::class, 'ShowAllNotifications']);
+    Route::post('markAsRead/{id}', [NotificationsController::class, 'markAsRead']);
 });
 
 Route::middleware('check_students')->group(function(){
@@ -78,6 +82,7 @@ Route::middleware('check_teacher')->group(function(){
     Route::get('all_teacher_session',[ZoomSessionController::class,'get_session'])->middleware('check_teacher_activate');
     Route::post('proccess_reservation/{reservation}',[TeacherController::class,'proccess_reservation'])->middleware('check_teacher_activate');
     Route::post('Acceptance_cash_delivery/{delivery_cash}',[TeacherController::class,'Acceptance_cash_delivery']);
+
 });
 
 

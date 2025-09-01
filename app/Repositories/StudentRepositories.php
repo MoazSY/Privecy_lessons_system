@@ -13,6 +13,9 @@ use App\Models\University_stage;
 use App\Models\University_subjects;
 use App\Models\Lesson_session;
 use App\Models\Report;
+use App\Models\Teacher;
+use App\Notifications\ReportSession;
+use App\Notifications\LessonBooked;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -216,6 +219,7 @@ return $attached;
 public function reservation($request,$student_id,$subject,$lessonDuration,$lessonPrice)
 {
     $student=Students::findOrFail($student_id);
+    $teacher=Teacher::findOrFail($request->teacher_id);
 
     $durationObj     = Carbon::createFromFormat('H:i:s', $lessonDuration);
     $lesson_duration = $durationObj->hour * 60 + $durationObj->minute;
@@ -236,7 +240,7 @@ public function reservation($request,$student_id,$subject,$lessonDuration,$lesso
         return 'overlap';
     }
 
- DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice){
+ DB::transaction(function() use ($request,$student_id,$subject,$lessonDuration,$lessonPrice,$teacher,$student){
    $admin= $this->getRandomAdmin();
 
     $duration = Carbon::createFromFormat('H:i:s', $lessonDuration);
@@ -269,6 +273,7 @@ public function reservation($request,$student_id,$subject,$lessonDuration,$lesso
     $student->CardValue-=$lessonPrice;
     $student->save();
 
+    $teacher->notify(new LessonBooked($reservation,$student,$subject));
 
 });
    $lastReservation = $student->Reservations()->orderBy('id', 'desc')->first();
@@ -344,6 +349,7 @@ return [$session,$session_recording_url];
 public function report($student,$request,$session,$path){
 $student=Students::findOrFail($student);
 $session=Lesson_session::findOrFail($session->id);
+$teacher=Teacher::findOrFail($session->teacher_id);
 $now=Carbon::now();
 $end_time=Carbon::parse($session->end_time);
 if($now > $end_time->copy()->addMinutes(10)){
@@ -359,6 +365,7 @@ $report=$student->Report()->create([
     'time_report'=>$now,
     'state'=>'In_Review'
 ]);
+$teacher->notify(new ReportSession($student,$report));
 return $report;
 }
 

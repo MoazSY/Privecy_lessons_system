@@ -13,6 +13,7 @@ use App\Repositories\TeacherRepositoriesInterface;
 use App\Repositories\TokenRepositories;
 use App\Repositories\TokenRepositoriesInterface;
 use Carbon\Carbon;
+use App\Notifications\cancleReservation;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -213,6 +214,7 @@ class StudentServices{
     public function cancle_reservation($reservation){
         $student_id=Auth::guard('student')->user()->id;
         $student=Students::findOrFail($student_id);
+        $teacher=Teacher::findOrFail($reservation->teacher_id);
        $reservation= $student->Reservations()->whereIn('state_reservation',['Watting_approve','accepted'])->findOrFail($reservation->id);
         if(!$reservation){
             return response()->json(['message'=>'reservation not found',404]);
@@ -226,7 +228,9 @@ class StudentServices{
        if($diffMinute<90){
         return response()->json(['message'=>'you cant cancle this reservation , you should cancle reservation before 90 minute at least ',422]);
        }
+       $cancle_reservation=$reservation;
         $reservation->delete();
+        $teacher->notify(new cancleReservation($student,$cancle_reservation));
         return response()->json(['message'=>'reservation cansle successfully']);
 
     }
@@ -241,4 +245,33 @@ class StudentServices{
         }
         return $this->student_repositories_interface->report($student_id,$request,$session,$path);
     }
+    public function ShowAllNotifications(){
+        $user=Auth::guard('student')->user();
+        $unreadNotifications = $user->unreadNotifications->map(function ($notification) {
+        return [
+        'id' => $notification->id,
+        'data' => $notification->data,
+        ];
+        });
+        $readNotifications = $user->readNotifications->map(function ($notification) {
+        return [
+        'id' => $notification->id,
+        'data' => $notification->data,
+        ];
+        });
+        return response()->json([
+        'unread' => $unreadNotifications,
+        'read' => $readNotifications,
+        ]);
+    }
+
+        public function markAsRead($id)
+        {
+        $notification = Auth::guard('student')->user()->notifications->where('id', $id)->first();
+        if ($notification) {
+        $notification->markAsRead();
+        return response()->json(['message' => 'Notification marked as read']);
+        }
+        return response()->json(['message' => null]);
+        }
 }

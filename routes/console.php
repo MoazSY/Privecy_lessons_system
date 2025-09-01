@@ -9,6 +9,7 @@ Artisan::command('inspire', function () {
 
 Schedule::command('zoom:sessions:auto-create')->everyMinute()->appendOutputTo(storage_path('logs/zoom-auto-create.log'));
 Schedule::command('zoom:sessions:auto-end')->everyMinute()->appendOutputTo(storage_path('logs/zoom-auto-end.log'));
+Schedule::command('app:delete-expired-tokens')->daily()->appendOutputTo(storage_path('logs/zoom-auto-delete-expierd-token.log'));
 
 
 Artisan::command('schedule:run-continuously', function () {

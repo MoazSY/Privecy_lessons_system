@@ -10,6 +10,7 @@ use App\Models\Teacher_university_stage;
 use App\Models\University_stage;
 use App\Models\University_subjects;
 use App\Models\Delivery_cash_teacher;
+use App\Notifications\proccessReservation;
 use App\Models\Admin;
 use Illuminate\Support\Carbon;
 
@@ -221,11 +222,12 @@ public function SendAccountForAprrove($request){
     $reservation=$teacher->reservations()->where('state_reservation','=','Watting_approve')->findOrFail($reservation->id);
     $reservation->state_reservation=$request->input('proccess_type');
     $reservation->save();
+    $student=Students::findOrFail($reservation->student_id);
     if($request->input('proccess_type')=='rejectd'){
-        $student=Students::findOrFail($reservation->student_id);
         $teacher_subject = $teacher->School_subjects()->wherePivot('school_subject_id', $reservation->subjectable_id)->first();
         $student->CardValue+=$teacher_subject->pivot->lesson_price-0.15*$teacher_subject->pivot->lesson_price;
         $student->save();
+
     }
 
     $currentDateTime = Carbon::now();
@@ -240,6 +242,7 @@ public function SendAccountForAprrove($request){
     $reservation->is_past = $currentDateTime->greaterThan($reservationDateTime);
     $reservation->is_upcoming = !$reservation->is_past;
     $reservation->human_readable = $timeDifference->format('%d day, %h hour, %i minute');
+    $student->notify(new proccessReservation($teacher,$reservation));
     return $reservation;
 
    }
@@ -264,7 +267,7 @@ public function SendAccountForAprrove($request){
         $cash_delivery->save();
     }
     return $cash_delivery;
-   } 
+   }
    public function get_Available_reservations($teacher,$subject){
 
    }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('proccess_report', function (Blueprint $table) {
             $table->id();
             $table->foreignId("admin_id")->references("id")->on("admin")->onDelete("cascade");
-            $table->foreignId("report_id")->references("id")->on("report")->onDelete("cascade");
+            $table->foreignId("report_id")->references("id")->on("reports")->onDelete("cascade");
             $table->enum("proccess_method",["warning","block","disscount","nothing"]);
             $table->enum("block_type",["hour","day","week"])->nullable();
             $table->integer("block_duaration_value")->nullable();

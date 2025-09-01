@@ -12,6 +12,8 @@ use App\Models\University_stage;
 use App\Models\University_subjects;
 use App\Models\Student_card_charging;
 use App\Models\Students;
+use App\Notifications\CashAccept;
+use App\Notifications\teacherProfileProccess;
 use App\Repositories\AdminRepositoriesInterface ;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -172,7 +174,9 @@ use Illuminate\Support\Facades\Hash;
                     'state' => $request->state,
                     'cause_of_reject' => null,
                 ]
-            ]);}
+            ]);
+            $teacher->notify(new teacherProfileProccess($admin,['status'=>$request->state,'reject_cause'=>null]));
+            }
              else{
                 $admin->TeacherAccount()->syncWithoutDetaching([
                     $teacher->id => [
@@ -180,6 +184,7 @@ use Illuminate\Support\Facades\Hash;
                         'cause_of_reject' => $request->cause_of_reject,
                     ]
                 ]);
+            $teacher->notify(new teacherProfileProccess($admin,['status'=>$request->state,'reject_cause'=>null]));
 
         }
 
@@ -209,11 +214,12 @@ use Illuminate\Support\Facades\Hash;
         }
         $admin->Delivery_cash_teacher()->attach([$request->teacher_id=>['cash_value'=>$request->cash_value,'delivery_time'=>Carbon::now()]]);
         $cash=$admin->Delivery_cash_teacher()->orderBy('delivery_time','desc')->first();
+        $teacher->notify(new CashAccept($admin,$cash));
         return $cash;
     }
     public function teacher_for_delivery($admin_id){
     $admin=Admin::findOrFail($admin_id);
-    $teacherNotPay=Payment_transaction::where('admin_id','=',$admin_id)->where('admin_payout_teacher','=',false)->get();
+    $teacherNotPay=Payment_transaction::where('admin_id','=',$admin_id)->where('admin_payout_teacher','=',false)->whereHas('S_or_G_lesson.lesson_session')->get();
 
     $pay = $teacherNotPay->filter(function ($teacher_N_Pay) {
 
