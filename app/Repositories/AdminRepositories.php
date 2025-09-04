@@ -213,7 +213,11 @@ use Illuminate\Support\Facades\Hash;
             return "Not_enought_cash";
         }
         $admin->Delivery_cash_teacher()->attach([$request->teacher_id=>['cash_value'=>$request->cash_value,'delivery_time'=>Carbon::now()]]);
-        $cash=$admin->Delivery_cash_teacher()->orderBy('delivery_time','desc')->first();
+        // $cash=$admin->Delivery_cash_teacher()->orderBy('delivery_time','desc')->first();
+            $cash = $admin->Delivery_cash_teacher()
+                ->withPivot('id') // تضمين الـ ID من الجدول الوسيط
+                ->orderBy('delivery_cash_teacher.delivery_time', 'desc')
+                ->first();
         $teacher->notify(new CashAccept($admin,$cash));
         return $cash;
     }
