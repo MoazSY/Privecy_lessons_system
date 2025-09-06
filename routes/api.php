@@ -70,9 +70,10 @@ Route::post('search_student1',[AdminController::class,'search_student']);
 Route::post('search_teacher',[AdminController::class,'search_teacher']);
 Route::post('delivery_cash_teacher',[AdminController::class,'delivery_cash_teacher']);
 Route::get('get_teacher_for_delivery',[AdminController::class,'get_teacher_for_delivery']);
+Route::post('proccess_report/{report}',[AdminController::class,'Report_procces']);
 });
 
-Route::middleware('check_teacher')->group(function(){
+Route::middleware(['check_teacher','check_teacher_block'])->group(function(){
     Route::post('SendAccountForAprrove',[TeacherController::class, 'Register']);
     Route::get('teacher_profile',[TeacherController::class,'teacher_profile']);
     Route::post('update_teacher_profile',[TeacherController::class,'update_profile']);
@@ -95,3 +96,5 @@ Route::prefix('zoom')->group(function () {
     Route::post('/sessions/{sessionId}/leave',           [ZoomSessionController::class, 'leave']);
     Route::get('/sessions/{sessionId}',                  [ZoomSessionController::class, 'getSessionInfo']);
 });
+
+// Route::post('/zoom/webhook', [ZoomSessionController::class, 'webhook']);

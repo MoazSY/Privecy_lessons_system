@@ -57,6 +57,9 @@ return [
     'client_secret' => env('ZOOM_CLIENT_SECRET'),
     'user_id' => env('ZOOM_USER_ID', 'me'),
     'base_url' => 'https://api.zoom.us/v2',
+         'verification_token' => env('ZOOM_VERIFICATION_TOKEN'),
+    'secret_token'       => env('ZOOM_SECRET_TOKEN'),
+
     // هام: لا يوجد تسجيل سحابي بالخطة المجانية
 ],
 

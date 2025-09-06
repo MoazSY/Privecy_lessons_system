@@ -23,4 +23,8 @@ class Report extends Model
     public function session(){
         return $this->belongsTo(Lesson_session::class,'lesson_session');
     }
+    
+    public function Report_proccess(){
+        return $this->hasMany(Report_proccess::class,'report_id');
+    }
 }

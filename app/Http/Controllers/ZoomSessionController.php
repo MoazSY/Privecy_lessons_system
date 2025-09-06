@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Lesson_session;
 use App\Models\Lesson_reservation;
 use App\Models\LessonSessionPresence;
+use App\Models\Students;
+use App\Models\Teacher;
 use App\Services\ZoomService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -83,7 +85,105 @@ class ZoomSessionController extends Controller
             ]
         ]);
     }
+        public function webhook(Request $request)
+    {
+    // ✅ خطوة التحقق (Challenge check)
+    if ($request->has('plainToken') && $request->has('encryptedToken')) {
+        return response()->json([
+            'plainToken' => $request->plainToken,
+            'encryptedToken' => $request->encryptedToken,
+        ], 200);
+    }
 
+    // 🔐 تحقق من التوكين بعد التحقق
+    $verificationToken = config('services.zoom.verification_token');
+    if ($request->header('Authorization') !== "Bearer $verificationToken") {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+        $payload = $request->all();
+        $event = $payload['event'] ?? null;
+
+        switch ($event) {
+            case 'meeting.participant_left':
+                $this->handleParticipantLeft($payload);
+                break;
+
+            case 'meeting.started':
+                $this->handleMeetingStarted($payload);
+                break;
+
+            case 'meeting.ended':
+                $this->handleMeetingEnded($payload);
+                break;
+        }
+
+        return response()->json(['success' => true]);
+
+    }
+
+    protected function handleParticipantLeft(array $payload)
+    {
+        $meetingId = $payload['payload']['object']['id'] ?? null;
+        $participant = $payload['payload']['object']['participant'] ?? null;
+        if (!$meetingId || !$participant) return;
+
+        $email = $participant['email'] ?? null;
+
+        $session = Lesson_session::where('meeting_id', $meetingId)->first();
+        if (!$session) return;
+
+        $user = Students::where('email', $email)->first()
+            ?? Teacher::where('email', $email)->first();
+        if (!$user) return;
+
+        $role = $user instanceof Teacher ? 'teacher' : 'student';
+
+        $presence = $session->presences()
+            ->where('user_id', $user->id)
+            ->where('role', $role)
+            ->whereNull('left_at')
+            ->latest()
+            ->first();
+
+        if ($presence) {
+            $presence->update(['left_at' => now()]);
+        }
+
+        // ✅ استدعاء دالة leave تلقائيًا
+        if ($role === 'teacher') {
+            // يمكنك هنا تنفيذ أي إجراءات إضافية خاصة بالمدرس إذا أردت
+        }
+    }
+
+    protected function handleMeetingStarted(array $payload)
+    {
+        $meetingId = $payload['payload']['object']['id'] ?? null;
+        if (!$meetingId) return;
+
+        $session = Lesson_session::where('meeting_id', $meetingId)->first();
+        if (!$session) return;
+
+        // تحديث حالة الجلسة إلى active عند بدء الاجتماع
+        $session->update(['status' => 'active']);
+    }
+
+    protected function handleMeetingEnded(array $payload)
+    {
+        $meetingId = $payload['payload']['object']['id'] ?? null;
+        if (!$meetingId) return;
+
+        $session = Lesson_session::where('meeting_id', $meetingId)->first();
+        if (!$session) return;
+
+        // تحديث الحضور وانهاء الجلسة
+        $session->presences()->whereNull('left_at')->update(['left_at' => now()]);
+        $session->update([
+            'status' => 'completed',
+            'end_time' => now(),
+            'teacher_duration_minutes' => $session->calculateTeacherDuration(),
+        ]);
+    }
     /**
      */
     public function joinAsTeacher($sessionId)

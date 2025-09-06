@@ -12,9 +12,12 @@ use App\Models\University_stage;
 use App\Models\University_subjects;
 use App\Models\Student_card_charging;
 use App\Models\Students;
+use App\Models\Report_proccess;
+use App\Models\Report;
 use App\Notifications\CashAccept;
 use App\Notifications\teacherProfileProccess;
 use App\Repositories\AdminRepositoriesInterface ;
+use App\Notifications\proccessReport;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -241,7 +244,7 @@ use Illuminate\Support\Facades\Hash;
         $session = $teacher_N_Pay->S_or_G_lesson->lesson_session->first();
         $teacher_N_Pay->session = $session;
         $teacher_N_Pay->teacher_duration = $session->calculateTeacherDuration();
-        $teacher_N_Pay->report=$session->Report()->get()->map(function($s){
+        $teacher_N_Pay->report=$session->Report()->whereDoesntHave('Report_proccess')->get()->map(function($s){
             if($s->reference_report_path!=null){
                 $fileUrl=asset('storage/'.$s->reference_report_path);
                 return ['report'=>$s,'fileUrl'=>$fileUrl];
@@ -260,4 +263,56 @@ use Illuminate\Support\Facades\Hash;
     }
     return $pay;
     }
+
+    public function proccess_report($data,$report,$admin_id){
+        $admin=Admin::findOrFail($admin_id);
+        $report=Report::FindOrFail($report->id);
+        $teacher=Teacher::findOrFail($report->session->teacher->id);
+       $proccess= $report->Report_proccess()->create([
+            'admin_id'=>$admin->id,
+            'proccess_method'=>$data['proccess_method'],
+            'block_type'=>$data['block_type'],
+            'block_duaration_value'=>$data['block_duaration_value'],
+            'disscount_percentage_value'=>$data['disscount_percentage_value'],
+            'response_time'=>now()
+        ]);
+        if($data['proccess_method']=='block'){
+            $block_duaration_value=$data['block_duaration_value'];
+            $block_type=$data['block_type'];
+            if($block_type=='hour'){
+                $teacher->blocked_until =now()->addHours($block_type);
+                $teacher->save();
+            }elseif($block_type=='day'){
+            $teacher->blocked_until =now()->addDays($block_type);
+            $teacher->save();
+            }
+            elseif($block_type=='week'){
+            $teacher->blocked_until =now()->addDays(7*$block_type);
+            $teacher->save();
+            }else{}
+        $teacher->notify(new proccessReport($report,$proccess));
+
+        }
+        if($data['proccess_method']=='disscount'){
+            $disscount_percentage_value=$data['disscount_percentage_value'];
+            $payment_transaction=$report->session->S_or_G_lesson->payments->first();
+            if($payment_transaction->disscount_percentage!=null){
+               $payment_transaction->disscount_percentage+=$disscount_percentage_value;
+                $payment_transaction->save();
+            }
+            else{
+               $payment_transaction->disscount_percentage=$disscount_percentage_value;
+                $payment_transaction->save();
+            }
+        $teacher->notify(new proccessReport($report,$proccess));
+        }
+        if($data['proccess_method']=='warning'){
+        $teacher->notify(new proccessReport($report,$proccess));
+        }
+        else{
+
+        }
+        return $proccess;
+    }
+
 }

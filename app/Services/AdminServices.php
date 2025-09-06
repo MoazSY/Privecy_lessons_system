@@ -223,5 +223,9 @@ public function login($request){
     return $this->admin_repositories_interface->teacher_for_delivery($admin_id);
 
     }
+    public function proccess_report($request,$report){
+    $admin_id=Auth::guard('admin')->user()->id;
+    return $this->admin_repositories_interface->proccess_report($request,$report,$admin_id);
+    }
 
 }

@@ -43,4 +43,7 @@ class Admin extends Authenticatable
     public function Report(){
         return $this->hasMany(Report::class,'admin_id');
     }
+    public function Report_proccess(){
+        return $this->hasMany(Report_proccess::class,'admin_id');
+    }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report_proccess;
 use App\Models\School_stage;
 use App\Models\Teacher;
 use App\Models\University_stage;
 use App\Services\AdminServices;
+use App\Models\Report;
 use App\Services\TeacherServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -205,5 +207,16 @@ class AdminController extends Controller
             return response()->json(['message'=>'not found any teacher for delivery']);
         }
         return response()->json(['message'=>'all teacher who is not recieve money','teacher'=>$deliver_teacher]);
+    }
+    public function Report_procces(Request $request, Report $report){
+        $validate=Validator::make($request->all(),[
+            'proccess_method'=>'required|string|in:warning,block,disscount,nothing',
+            'block_type'=>'sometimes|string|in:hour,day,week',
+            'block_duaration_value'=>'sometimes|interger',
+            'disscount_percentage_value'=>'sometimes|float'
+        ]);
+        $data=$validate->validated();
+        $proccess=$this->admin_services->proccess_report($data,$report);
+        return $proccess;
     }
 }

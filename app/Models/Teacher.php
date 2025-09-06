@@ -26,7 +26,8 @@ class Teacher extends Authenticatable
         'gender',
         'account_number',
         'Activate_Account',
-        "CardValue"
+        "CardValue",
+        'blocked_until'
     ];
 
     public function refreshTokens()
@@ -67,5 +68,10 @@ class Teacher extends Authenticatable
     public function Delivery_cash_teacher(){
         return $this->hasMany(Delivery_cash_teacher::class,'teacher_id');
     }
+
+    public function isBlocked(): bool
+{
+    return $this->blocked_until && now()->lessThan($this->blocked_until);
+}
 }
 

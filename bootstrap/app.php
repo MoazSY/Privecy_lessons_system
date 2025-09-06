@@ -19,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'check_teacher'=>\App\Http\Middleware\Check_Teacher::class,
             'check_auth'=>\App\Http\Middleware\Check_Auth::class,
             'check_teacher_activate'=>\App\Http\Middleware\Check_Teacher_Activate::class,
-            'check_SuperAdmin'=>\App\Http\Middleware\Check_SuperAdmin::class
+            'check_SuperAdmin'=>\App\Http\Middleware\Check_SuperAdmin::class,
+            'check_teacher_block'=>\App\Http\Middleware\Check_teacher_block::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
