@@ -31,7 +31,7 @@ class OtpCodeServices{
         cache()->put('otp_' . $internalPhone, $array, now()->addMinute(10));
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer $2b$10$rCvDE8JoWunKCQmB34nwUOuz2NGs08V9zaFXphBy_WbPjREBSK.LW'
+            'Authorization' => 'Bearer $2b$10$09xUx2Bd6R5I_ymlINdenuQvRfJdOvGKoBi_HxWseYcWFzBllg5yW'
         ])->post('http://localhost:21465/api/test_api/send-message', [
             'phone' => $internalPhone,
             'message' => "Your verification code is: $otp",
