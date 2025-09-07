@@ -14,6 +14,7 @@ use App\Models\Student_card_charging;
 use App\Models\Students;
 use App\Models\Report_proccess;
 use App\Models\Report;
+use App\Models\Lesson_session;
 use App\Notifications\CashAccept;
 use App\Notifications\teacherProfileProccess;
 use App\Repositories\AdminRepositoriesInterface ;
@@ -271,11 +272,13 @@ use Illuminate\Support\Facades\Hash;
        $proccess= $report->Report_proccess()->create([
             'admin_id'=>$admin->id,
             'proccess_method'=>$data['proccess_method'],
-            'block_type'=>$data['block_type'],
-            'block_duaration_value'=>$data['block_duaration_value'],
-            'disscount_percentage_value'=>$data['disscount_percentage_value'],
+            'block_type'=>$data['block_type']??null,
+            'block_duaration_value'=>$data['block_duaration_value']??null,
+            'disscount_percentage_value'=>$data['disscount_percentage_value']??null,
             'response_time'=>now()
         ]);
+        $report->state='Resolved';
+        $report->save();
         if($data['proccess_method']=='block'){
             $block_duaration_value=$data['block_duaration_value'];
             $block_type=$data['block_type'];
@@ -313,6 +316,25 @@ use Illuminate\Support\Facades\Hash;
 
         }
         return $proccess;
+    }
+
+    public function transform_money($admin_id,$session){
+        $admin=Admin::findOrFail($admin_id);
+        $session=Lesson_session::findOrFail($session->id);
+        if($session->end_time>now()){
+            return 'session_not_end';
+        }
+        if ($session->hasUnprocessedReports()) {
+        return 'process_reports_before_transfer';
+        }
+        $teacher=Teacher::findOrFail($session->teacher_id);
+        $payment=$session->S_or_G_lesson->payments->first();
+        $transformValue=$payment->amount-$payment->commission_value-($payment->disscount_percentage ?? 0)*($payment->amount-$payment->commission_value);
+        $teacher->CardValue+=$transformValue;
+        $teacher->save();
+        $payment->admin_payout_teacher=true;
+        $payment->save();
+        return $transformValue;
     }
 
 }

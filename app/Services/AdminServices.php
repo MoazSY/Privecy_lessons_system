@@ -227,5 +227,8 @@ public function login($request){
     $admin_id=Auth::guard('admin')->user()->id;
     return $this->admin_repositories_interface->proccess_report($request,$report,$admin_id);
     }
-
+    public function transform_money($session){
+        $admin_id=Auth::guard('admin')->user()->id;
+        return $this->admin_repositories_interface->transform_money($admin_id,$session);
+    }
 }

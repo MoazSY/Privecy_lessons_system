@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson_session;
 use App\Models\Report_proccess;
 use App\Models\School_stage;
 use App\Models\Teacher;
@@ -209,14 +210,24 @@ class AdminController extends Controller
         return response()->json(['message'=>'all teacher who is not recieve money','teacher'=>$deliver_teacher]);
     }
     public function Report_procces(Request $request, Report $report){
-        $validate=Validator::make($request->all(),[
-            'proccess_method'=>'required|string|in:warning,block,disscount,nothing',
-            'block_type'=>'sometimes|string|in:hour,day,week',
-            'block_duaration_value'=>'sometimes|interger',
-            'disscount_percentage_value'=>'sometimes|float'
-        ]);
+    $validate = Validator::make($request->all(), [
+        'proccess_method' => 'required|string|in:warning,block,disscount,nothing',
+        'block_type' => 'nullable|string|in:hour,day,week',
+        'block_duaration_value' => 'nullable|integer',
+        'disscount_percentage_value' => 'nullable|numeric'
+    ]);
         $data=$validate->validated();
         $proccess=$this->admin_services->proccess_report($data,$report);
-        return $proccess;
+        return response()->json(['message'=>'report proccess successfully','proccess'=>$proccess]);
+    }
+    public function transform_money(Lesson_session $session){
+        $transform=$this->admin_services->transform_money($session);
+        if($transform=='session_not_end'){
+            return response()->json(['message'=>'session not end']);
+        }
+        if($transform=='process_reports_before_transfer'){
+        return response()->json(['message'=>'session contain report not proccess']);
+        }
+        return response()->json(['message'=>'transfere money to teacher','transfer_value'=>$transform]);
     }
 }

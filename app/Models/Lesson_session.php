@@ -61,6 +61,13 @@ public function S_or_G_lesson()
         public function Report(){
             return $this->hasMany(Report::class,'lesson_session');
         }
+
+        public function hasUnprocessedReports(): bool
+        {
+        return $this->Report()
+        ->where('state', '!=', 'Resolved') // أو أي حالة تشير إلى أن التقرير معالج
+        ->exists();
+        }
         /**
          * جمع مدة وجود المدرس بالدقائق عبر كل الفترات
          */

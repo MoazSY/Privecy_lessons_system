@@ -71,6 +71,7 @@ Route::post('search_teacher',[AdminController::class,'search_teacher']);
 Route::post('delivery_cash_teacher',[AdminController::class,'delivery_cash_teacher']);
 Route::get('get_teacher_for_delivery',[AdminController::class,'get_teacher_for_delivery']);
 Route::post('proccess_report/{report}',[AdminController::class,'Report_procces']);
+Route::post('transform_money/{session}',[AdminController::class,'transform_money']);
 });
 
 Route::middleware(['check_teacher','check_teacher_block'])->group(function(){

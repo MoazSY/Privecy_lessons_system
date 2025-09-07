@@ -352,7 +352,7 @@ $session=Lesson_session::findOrFail($session->id);
 $teacher=Teacher::findOrFail($session->teacher_id);
 $now=Carbon::now();
 $end_time=Carbon::parse($session->end_time);
-if($now > $end_time->copy()->addMinutes(10)){
+if($now > $end_time->copy()->addMinutes(10)|| $now<$end_time){
     return null;
 }
 $report=$student->Report()->create([
