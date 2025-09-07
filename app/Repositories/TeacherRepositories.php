@@ -121,7 +121,11 @@ public function SendAccountForAprrove($request){
     $universitySubjects=[];
     $teachers=Teacher::withAvg('Rating', 'rate')
     ->withCount(['folowing_value' => fn($q) => $q->where('following_state', true)])
-    ->where('Activate_Account','=',true)->get();
+    ->where('Activate_Account','=',true)->get()
+        ->filter(function($teacher) {
+        return !$teacher->isBlocked(); // إرجاع true فقط للمدرسين غير المحظورين
+    });
+    
     if($teachers->isEmpty()){
         $array=null;
     }

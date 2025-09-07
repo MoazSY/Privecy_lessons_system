@@ -205,7 +205,10 @@ public function login($request){
         $name = strtolower($request->input('lastName'));
         $query->whereRaw('LOWER(lastName) LIKE ?', ["%{$name}%"]);
     }
-    $result=$query->get()->map(function ($student){
+    $result=$query->get()->filter(function($teacher) {
+    return !$teacher->isBlocked();
+    })
+    ->map(function ($student){
         return[
         'student'=>$student,
         'imageUrl'=> asset('storage/' . $student->image)

@@ -74,7 +74,7 @@ Route::post('proccess_report/{report}',[AdminController::class,'Report_procces']
 Route::post('transform_money/{session}',[AdminController::class,'transform_money']);
 });
 
-Route::middleware(['check_teacher','check_teacher_block'])->group(function(){
+Route::middleware('check_teacher')->group(function(){
     Route::post('SendAccountForAprrove',[TeacherController::class, 'Register']);
     Route::get('teacher_profile',[TeacherController::class,'teacher_profile']);
     Route::post('update_teacher_profile',[TeacherController::class,'update_profile']);

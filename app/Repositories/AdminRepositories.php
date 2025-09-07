@@ -333,6 +333,7 @@ use Illuminate\Support\Facades\Hash;
         $teacher->CardValue+=$transformValue;
         $teacher->save();
         $payment->admin_payout_teacher=true;
+        $payment->teacher_amount_final=$transformValue;
         $payment->save();
         return $transformValue;
     }

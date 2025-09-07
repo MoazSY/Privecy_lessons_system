@@ -230,4 +230,5 @@ class AdminController extends Controller
         }
         return response()->json(['message'=>'transfere money to teacher','transfer_value'=>$transform]);
     }
+    
 }

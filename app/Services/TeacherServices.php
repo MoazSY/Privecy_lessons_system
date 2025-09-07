@@ -172,7 +172,10 @@ protected $teacher_repositories_interface;
                  $query->having('rating_avg_rate', '>=', $request->input('rate'));
                 }
 
-            $result = $query->get()->map(function ($teacher) use ($request) {
+            $result = $query->get()->filter(function($teacher) {
+            return !$teacher->isBlocked(); 
+            })->
+            map(function ($teacher) use ($request) {
                 return [
                     "teacher" => $teacher,
                     "teacherImageUrl" => asset('storage/' . $teacher->image),
