@@ -232,15 +232,18 @@ class AdminController extends Controller
     }
     public function show_commisions(Request $request){
         $validate=Validator::make($request->all(),[
-            'show_type'=>'required|in:daily,specefic_day,monthly,total',
+            'show_type'=>'required|in:daily,specefic_day,specefic_month,monthly,total',
+
             'specefic_day'=>'nullable|date_format:Y-m-d',
-            'month'=>'nullable|integer',
+    
+            'year' => 'nullable|integer|min:2020|max:'.(now()->year+1),
+            'month' => 'nullable|integer|between:1,12'
         ]);
         if($validate->fails()){
             return response()->json(['message'=>$validate->errors()]);
         }
         $commision=$this->admin_services->show_commisions($request);
-
+        return response()->json(['message'=>'commision value of system ','commision'=>$commision[0],'type'=>$commision[1]]);
     }
 
 }

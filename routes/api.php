@@ -72,6 +72,7 @@ Route::post('delivery_cash_teacher',[AdminController::class,'delivery_cash_teach
 Route::get('get_teacher_for_delivery',[AdminController::class,'get_teacher_for_delivery']);
 Route::post('proccess_report/{report}',[AdminController::class,'Report_procces']);
 Route::post('transform_money/{session}',[AdminController::class,'transform_money']);
+Route::post('get_commision',[AdminController::class,'show_commisions'])->middleware('check_SuperAdmin');
 });
 
 Route::middleware('check_teacher')->group(function(){

@@ -337,18 +337,60 @@ use Illuminate\Support\Facades\Hash;
         $payment->save();
         return $transformValue;
     }
-    public function show_commisions($request){
-        if($request->input('show_type')=='daily'){
+    // public function show_commisions($request){
+    //     if($request->input('show_type')=='daily'){
+    //         $payment=Payment_transaction::where('payment_transaction_time',today())->where('admin_payout_teacher',true)->sum('commission_value');
+    //     }
+    //     if($request->input('show_type')=='specefic_day'){
 
-        }
-        if($request->input('show_type')=='specefic_day'){
+    //     }
+    //     if($request->input('show_type')=='monthly'){
 
-        }
-        if($request->input('show_type')=='monthly'){
+    //     }
+    //     if($request->input('show_type')=='total'){
 
-        }
-        if($request->input('show_type')=='total'){
+    //     }
+    // }
 
+    public function show_commisions($request)
+    {
+
+        $showType = $request->input('show_type');
+        $payment = 0;
+
+        if ($showType == 'daily') {
+            $payment = Payment_transaction::whereDate('payment_transaction_time', today())
+                ->where('admin_payout_teacher', true)
+                ->sum('commission_value');
+
+        } elseif ($showType == 'specefic_day') {
+            $payment = Payment_transaction::whereDate('payment_transaction_time', $request->specefic_day)
+                ->where('admin_payout_teacher', true)
+                ->sum('commission_value');
+
+        } elseif ($showType == 'monthly') {
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+        
+        $payment = Payment_transaction::whereBetween('payment_transaction_time', [$startOfMonth, $endOfMonth])
+            ->where('admin_payout_teacher', true)
+            ->sum('commission_value');
+
+        } elseif ($showType == 'specefic_month') {
+
+            $payment = Payment_transaction::whereYear('payment_transaction_time', $request->year)
+                ->whereMonth('payment_transaction_time', $request->month)
+                ->where('admin_payout_teacher', true)
+                ->sum('commission_value');
+
+        } elseif ($showType == 'total') {
+            $payment = Payment_transaction::where('admin_payout_teacher', true)
+                ->sum('commission_value');
+
+        } else {
         }
-    }
+        return [$payment,$showType];
+
+}
+
 }
