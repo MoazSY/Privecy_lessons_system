@@ -229,6 +229,9 @@ class StudentServices{
         return response()->json(['message'=>'you cant cancle this reservation , you should cancle reservation before 90 minute at least ',422]);
        }
        $cancle_reservation=$reservation;
+       $teacher_subject = $teacher->School_subjects()->wherePivot('school_subject_id', $reservation->subjectable_id)->first();
+        $student->CardValue-=0.15*$teacher_subject->pivot->lesson_price;
+        $student->save();
         $reservation->delete();
         $teacher->notify(new cancleReservation($student,$cancle_reservation));
         return response()->json(['message'=>'reservation cansle successfully']);

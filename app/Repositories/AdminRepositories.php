@@ -337,20 +337,7 @@ use Illuminate\Support\Facades\Hash;
         $payment->save();
         return $transformValue;
     }
-    // public function show_commisions($request){
-    //     if($request->input('show_type')=='daily'){
-    //         $payment=Payment_transaction::where('payment_transaction_time',today())->where('admin_payout_teacher',true)->sum('commission_value');
-    //     }
-    //     if($request->input('show_type')=='specefic_day'){
 
-    //     }
-    //     if($request->input('show_type')=='monthly'){
-
-    //     }
-    //     if($request->input('show_type')=='total'){
-
-    //     }
-    // }
 
     public function show_commisions($request)
     {

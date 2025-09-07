@@ -125,7 +125,7 @@ public function SendAccountForAprrove($request){
         ->filter(function($teacher) {
         return !$teacher->isBlocked(); // إرجاع true فقط للمدرسين غير المحظورين
     });
-    
+
     if($teachers->isEmpty()){
         $array=null;
     }
@@ -229,7 +229,7 @@ public function SendAccountForAprrove($request){
     $student=Students::findOrFail($reservation->student_id);
     if($request->input('proccess_type')=='rejectd'){
         $teacher_subject = $teacher->School_subjects()->wherePivot('school_subject_id', $reservation->subjectable_id)->first();
-        $student->CardValue+=$teacher_subject->pivot->lesson_price-0.15*$teacher_subject->pivot->lesson_price;
+        $student->CardValue+=$teacher_subject->pivot->lesson_price;
         $student->save();
 
     }
