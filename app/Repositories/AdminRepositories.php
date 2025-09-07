@@ -283,14 +283,14 @@ use Illuminate\Support\Facades\Hash;
             $block_duaration_value=$data['block_duaration_value'];
             $block_type=$data['block_type'];
             if($block_type=='hour'){
-                $teacher->blocked_until =now()->addHours($block_type);
+                $teacher->blocked_until =now()->addHours($block_duaration_value);
                 $teacher->save();
             }elseif($block_type=='day'){
-            $teacher->blocked_until =now()->addDays($block_type);
+            $teacher->blocked_until =now()->addDays($block_duaration_value);
             $teacher->save();
             }
             elseif($block_type=='week'){
-            $teacher->blocked_until =now()->addDays(7*$block_type);
+            $teacher->blocked_until =now()->addDays(7*$block_duaration_value);
             $teacher->save();
             }else{}
         $teacher->notify(new proccessReport($report,$proccess));
@@ -337,5 +337,18 @@ use Illuminate\Support\Facades\Hash;
         $payment->save();
         return $transformValue;
     }
+    public function show_commisions($request){
+        if($request->input('show_type')=='daily'){
 
+        }
+        if($request->input('show_type')=='specefic_day'){
+
+        }
+        if($request->input('show_type')=='monthly'){
+
+        }
+        if($request->input('show_type')=='total'){
+
+        }
+    }
 }

@@ -234,4 +234,7 @@ public function login($request){
         $admin_id=Auth::guard('admin')->user()->id;
         return $this->admin_repositories_interface->transform_money($admin_id,$session);
     }
+    public function show_commisions($request){
+        return $this->admin_repositories_interface->show_commisions($request);
+    }
 }

@@ -15,4 +15,5 @@ interface AdminRepositoriesInterface{
     public function teacher_for_delivery($admin_id);
     public function proccess_report($request,$report_proccess,$admin_id);
     public function transform_money($admin_id,$session);
+    public function show_commisions($request);  
 }

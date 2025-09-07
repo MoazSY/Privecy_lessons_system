@@ -230,5 +230,17 @@ class AdminController extends Controller
         }
         return response()->json(['message'=>'transfere money to teacher','transfer_value'=>$transform]);
     }
-    
+    public function show_commisions(Request $request){
+        $validate=Validator::make($request->all(),[
+            'show_type'=>'required|in:daily,specefic_day,monthly,total',
+            'specefic_day'=>'nullable|date_format:Y-m-d',
+            'month'=>'nullable|integer',
+        ]);
+        if($validate->fails()){
+            return response()->json(['message'=>$validate->errors()]);
+        }
+        $commision=$this->admin_services->show_commisions($request);
+
+    }
+
 }
